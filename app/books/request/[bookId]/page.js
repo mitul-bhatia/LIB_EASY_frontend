@@ -27,8 +27,8 @@ export default function RequestBookPage() {
     }
 
     if (user.isAdmin) {
-      alert("Admins cannot request books");
-      router.push("/books");
+      setError("Admins cannot request books. Please use the Issue/Reserve feature in admin dashboard.");
+      setTimeout(() => router.push("/books"), 2000);
       return;
     }
 

@@ -7,6 +7,7 @@ export default function GetMember() {
   const [selectedMemberId, setSelectedMemberId] = useState("");
   const [memberDetails, setMemberDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchAllMembers();
@@ -25,12 +26,14 @@ export default function GetMember() {
     if (!memberId) return;
     
     setIsLoading(true);
+    setError("");
     try {
       const res = await api.get(`/users/getuser/${memberId}`);
       setMemberDetails(res.data);
     } catch (err) {
       console.error("Failed to fetch member details:", err);
-      alert("Failed to fetch member details");
+      setError("Failed to fetch member details. Please try again.");
+      setTimeout(() => setError(""), 3000);
     } finally {
       setIsLoading(false);
     }
@@ -93,6 +96,13 @@ export default function GetMember() {
             ))}
           </select>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="p-3 rounded-lg mb-4 bg-red-100 text-red-700">
+            {error}
+          </div>
+        )}
 
         {/* Loading State */}
         {isLoading && (

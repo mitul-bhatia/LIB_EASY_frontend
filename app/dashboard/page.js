@@ -49,19 +49,21 @@ export default function MemberDashboard() {
 
   const previousTransactions = memberDetails?.prevTransactions || [];
 
-  const handleCancelRequest = async (transactionId) => {
-    if (!confirm("Are you sure you want to cancel this request?")) {
-      return;
-    }
+  const [cancelMessage, setCancelMessage] = useState("");
 
+  const handleCancelRequest = async (transactionId) => {
+    setCancelMessage("");
     try {
       await api.post(`/transactions/cancel/${transactionId}`, {
         userId: user.id,
       });
-      alert("Request cancelled successfully");
+      setCancelMessage("Request cancelled successfully");
       fetchMemberDetails();
+      // Clear message after 3 seconds
+      setTimeout(() => setCancelMessage(""), 3000);
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to cancel request");
+      setCancelMessage(err.response?.data?.message || "Failed to cancel request");
+      setTimeout(() => setCancelMessage(""), 3000);
     }
   };
 
@@ -70,17 +72,9 @@ export default function MemberDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Member Dashboard</h1>
-            <p className="text-sm text-gray-600">Welcome, {user.userFullName}</p>
-          </div>
-          <button
-            onClick={logout}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-          >
-            Logout
-          </button>
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <h1 className="text-3xl font-bold text-gray-900">Member Dashboard</h1>
+          <p className="text-sm text-gray-600 mt-1">View your books and manage requests</p>
         </div>
       </div>
 
@@ -202,6 +196,17 @@ export default function MemberDashboard() {
                 <p className="text-sm text-gray-600 mb-4">
                   These are your book requests waiting for admin approval.
                 </p>
+                
+                {cancelMessage && (
+                  <div className={`p-3 rounded-lg mb-4 ${
+                    cancelMessage.includes("success") 
+                      ? "bg-green-100 text-green-700" 
+                      : "bg-red-100 text-red-700"
+                  }`}>
+                    {cancelMessage}
+                  </div>
+                )}
+
                 {pendingTransactions.length > 0 ? (
                   <table className="min-w-full bg-white border rounded-lg">
                     <thead className="bg-gray-50">

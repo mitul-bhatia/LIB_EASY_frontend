@@ -26,10 +26,6 @@ export default function ApproveRequests() {
   };
 
   const handleApprove = async (transactionId) => {
-    if (!confirm("Approve this book request? The book will be directly issued to the student.")) {
-      return;
-    }
-
     setIsLoading(true);
     setMessage("");
     try {
@@ -46,10 +42,6 @@ export default function ApproveRequests() {
   };
 
   const handleReject = async (transactionId) => {
-    if (!confirm("Reject this book request? This action cannot be undone.")) {
-      return;
-    }
-
     setIsLoading(true);
     setMessage("");
     try {

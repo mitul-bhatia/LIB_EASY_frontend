@@ -58,7 +58,8 @@ export default function AllBooksPage() {
     }
 
     if (user.isAdmin) {
-      alert("Admins cannot request books. Please use the Issue/Reserve feature in admin dashboard.");
+      // Admins should use admin dashboard, just redirect
+      router.push("/admin/dashboard");
       return;
     }
 
