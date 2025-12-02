@@ -42,11 +42,6 @@ export default function MemberDashboard() {
       (t) => t && t.transactionStatus === "Pending"
     ) || [];
 
-  const reservedTransactions =
-    memberDetails?.activeTransactions?.filter(
-      (t) => t && t.transactionType === "Reserved" && t.transactionStatus === "Reserved"
-    ) || [];
-
   const issuedTransactions =
     memberDetails?.activeTransactions?.filter(
       (t) => t && t.transactionType === "Issued" && t.transactionStatus === "Active"
@@ -119,16 +114,6 @@ export default function MemberDashboard() {
                 )}
               </button>
               <button
-                onClick={() => setActiveTab("reserved")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === "reserved"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                Ready for Pickup
-              </button>
-              <button
                 onClick={() => setActiveTab("issued")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === "issued"
@@ -188,18 +173,12 @@ export default function MemberDashboard() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="bg-yellow-50 p-4 rounded-lg text-center">
                     <p className="text-3xl font-bold text-yellow-600">
                       {pendingTransactions.length}
                     </p>
                     <p className="text-sm text-gray-600">Pending</p>
-                  </div>
-                  <div className="bg-green-50 p-4 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-green-600">
-                      {reservedTransactions.length}
-                    </p>
-                    <p className="text-sm text-gray-600">Ready</p>
                   </div>
                   <div className="bg-blue-50 p-4 rounded-lg text-center">
                     <p className="text-3xl font-bold text-blue-600">
@@ -229,6 +208,8 @@ export default function MemberDashboard() {
                       <tr>
                         <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
                         <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">From Date</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">To Date</th>
                         <th className="px-4 py-2 text-left text-sm font-medium">Requested On</th>
                         <th className="px-4 py-2 text-left text-sm font-medium">Status</th>
                         <th className="px-4 py-2 text-left text-sm font-medium">Action</th>
@@ -239,6 +220,8 @@ export default function MemberDashboard() {
                         <tr key={tx.id} className="border-t">
                           <td className="px-4 py-2 text-sm">{index + 1}</td>
                           <td className="px-4 py-2 text-sm font-medium">{tx.bookName}</td>
+                          <td className="px-4 py-2 text-sm">{tx.fromDate}</td>
+                          <td className="px-4 py-2 text-sm">{tx.toDate}</td>
                           <td className="px-4 py-2 text-sm">
                             {new Date(tx.createdAt).toLocaleDateString()}
                           </td>
@@ -265,47 +248,6 @@ export default function MemberDashboard() {
                     <p className="text-sm text-gray-400 mt-2">
                       Browse books and click "Request Book" to get started
                     </p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === "reserved" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Ready for Pickup</h2>
-                <p className="text-sm text-gray-600 mb-4">
-                  These books have been approved and are ready for you to pick up from the library.
-                </p>
-                {reservedTransactions.length > 0 ? (
-                  <table className="min-w-full bg-white border rounded-lg">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Approved On</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Valid Until</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {reservedTransactions.map((tx, index) => (
-                        <tr key={tx.id} className="border-t bg-green-50">
-                          <td className="px-4 py-2 text-sm">{index + 1}</td>
-                          <td className="px-4 py-2 text-sm font-medium">{tx.bookName}</td>
-                          <td className="px-4 py-2 text-sm">{tx.fromDate}</td>
-                          <td className="px-4 py-2 text-sm">{tx.toDate}</td>
-                          <td className="px-4 py-2 text-sm">
-                            <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
-                              ✓ Ready for Pickup
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">No books ready for pickup</p>
                   </div>
                 )}
               </div>

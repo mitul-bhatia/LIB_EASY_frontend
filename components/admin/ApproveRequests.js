@@ -26,7 +26,7 @@ export default function ApproveRequests() {
   };
 
   const handleApprove = async (transactionId) => {
-    if (!confirm("Approve this book request? The book will be reserved for the student.")) {
+    if (!confirm("Approve this book request? The book will be directly issued to the student.")) {
       return;
     }
 
@@ -36,7 +36,7 @@ export default function ApproveRequests() {
       const res = await api.post(`/transactions/approve/${transactionId}`, {
         isAdmin: user?.isAdmin || false,
       });
-      setMessage(res.data.message || "Request approved successfully!");
+      setMessage(res.data.message || "Request approved and book issued successfully!");
       fetchPendingRequests();
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to approve request");
@@ -103,6 +103,15 @@ export default function ApproveRequests() {
                     Book Name
                   </th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    From Date
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    To Date
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    Duration
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
                     Requested On
                   </th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
@@ -124,8 +133,16 @@ export default function ApproveRequests() {
                       {request.bookName}
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-600">
-                      {new Date(request.createdAt).toLocaleDateString()} at{" "}
-                      {new Date(request.createdAt).toLocaleTimeString()}
+                      {request.fromDate}
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-600">
+                      {request.toDate}
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-600">
+                      {Math.ceil((new Date(request.toDate) - new Date(request.fromDate)) / (1000 * 60 * 60 * 24))} days
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-600">
+                      {new Date(request.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-2 text-sm">
                       <div className="flex gap-2">

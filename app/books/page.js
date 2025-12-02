@@ -52,7 +52,7 @@ export default function AllBooksPage() {
     return book.bookCountAvailable > 0 ? "Available" : "Unavailable";
   };
 
-  const handleRequestBook = async (bookId) => {
+  const handleRequestBook = async (book) => {
     if (!user) {
       router.push("/signin");
       return;
@@ -63,14 +63,23 @@ export default function AllBooksPage() {
       return;
     }
 
-    setRequestingBookId(bookId);
+    // Ask for duration
+    const fromDate = prompt("From Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
+    if (!fromDate) return;
+
+    const defaultToDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const toDate = prompt("To Date (YYYY-MM-DD):", defaultToDate);
+    if (!toDate) return;
+
+    setRequestingBookId(book.id);
     try {
       const res = await api.post("/transactions/request-book", {
-        bookId,
+        bookId: book.id,
         userId: user.id,
+        fromDate,
+        toDate,
       });
       alert(res.data.message || "Book request submitted successfully!");
-      // Optionally refresh books to update UI
       fetchData();
     } catch (err) {
       alert(err.response?.data?.message || "Failed to request book");
@@ -184,7 +193,7 @@ export default function AllBooksPage() {
                 {/* Request Book Button - Only for Students */}
                 {user && !user.isAdmin && (
                   <button
-                    onClick={() => handleRequestBook(book.id)}
+                    onClick={() => handleRequestBook(book)}
                     disabled={requestingBookId === book.id}
                     className={`mt-3 w-full py-2 rounded-lg font-medium transition ${
                       requestingBookId === book.id
@@ -198,7 +207,7 @@ export default function AllBooksPage() {
                       ? "Requesting..."
                       : book.bookCountAvailable > 0
                       ? "Request Book"
-                      : "Join Waitlist"}
+                      : "Request (Waitlist)"}
                   </button>
                 )}
 
