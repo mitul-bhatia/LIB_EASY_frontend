@@ -3,11 +3,10 @@ import { useState, useEffect } from "react";
 import api from "@/lib/axios";
 
 export default function AddMember() {
-  const [userType, setUserType] = useState("Student");
+  const [isAdmin, setIsAdmin] = useState(false);
   const [form, setForm] = useState({
     userFullName: "",
-    admissionId: "",
-    employeeId: "",
+    memberId: "",
     mobileNumber: "",
     email: "",
     password: "",
@@ -46,33 +45,15 @@ export default function AddMember() {
       return;
     }
 
-    if (userType === "Student" && !form.admissionId) {
-      setMessage("Admission ID is required for students");
-      setIsLoading(false);
-      return;
-    }
-
-    if (userType === "Staff" && !form.employeeId) {
-      setMessage("Employee ID is required for staff");
-      setIsLoading(false);
-      return;
-    }
-
     try {
       const payload = {
-        userType,
         userFullName: form.userFullName,
+        memberId: form.memberId || undefined,
         mobileNumber: form.mobileNumber,
         email: form.email,
         password: form.password,
-        isAdmin: false,
+        isAdmin: isAdmin,
       };
-
-      if (userType === "Student") {
-        payload.admissionId = form.admissionId;
-      } else {
-        payload.employeeId = form.employeeId;
-      }
 
       const res = await api.post("/auth/signup", payload);
       setMessage("Member added successfully!");
@@ -83,8 +64,7 @@ export default function AddMember() {
       // Clear form
       setForm({
         userFullName: "",
-        admissionId: "",
-        employeeId: "",
+        memberId: "",
         mobileNumber: "",
         email: "",
         password: "",
@@ -102,18 +82,18 @@ export default function AddMember() {
         <h2 className="text-xl font-semibold mb-4">Add New Member</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* User Type Selection */}
+          {/* Role Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              User Type *
+              Role *
             </label>
-            <div className="flex space-x-4">
+            <div className="flex space-x-2">
               <button
                 type="button"
-                onClick={() => setUserType("Student")}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  userType === "Student"
-                    ? "bg-green-600 text-white"
+                onClick={() => setIsAdmin(false)}
+                className={`flex-1 py-2 rounded-lg font-medium transition ${
+                  !isAdmin
+                    ? "bg-blue-600 text-white"
                     : "bg-gray-200 text-gray-700"
                 }`}
               >
@@ -121,14 +101,14 @@ export default function AddMember() {
               </button>
               <button
                 type="button"
-                onClick={() => setUserType("Staff")}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  userType === "Staff"
-                    ? "bg-blue-600 text-white"
+                onClick={() => setIsAdmin(true)}
+                className={`flex-1 py-2 rounded-lg font-medium transition ${
+                  isAdmin
+                    ? "bg-red-600 text-white"
                     : "bg-gray-200 text-gray-700"
                 }`}
               >
-                Staff
+                Admin
               </button>
             </div>
           </div>
@@ -147,22 +127,17 @@ export default function AddMember() {
             />
           </div>
 
-          {/* ID Field */}
+          {/* Member ID */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              {userType === "Student" ? "Admission ID *" : "Employee ID *"}
+              Member ID (Optional)
             </label>
             <input
               type="text"
-              value={userType === "Student" ? form.admissionId : form.employeeId}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  [userType === "Student" ? "admissionId" : "employeeId"]: e.target.value,
-                })
-              }
+              value={form.memberId}
+              onChange={(e) => setForm({ ...form, memberId: e.target.value })}
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-              required
+              placeholder="e.g., MEM001"
             />
           </div>
 
@@ -229,10 +204,12 @@ export default function AddMember() {
             className={`w-full py-2 px-4 rounded-lg font-medium text-white ${
               isLoading
                 ? "bg-gray-400 cursor-not-allowed"
+                : isAdmin
+                ? "bg-red-600 hover:bg-red-700"
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
-            {isLoading ? "Adding Member..." : "Add Member"}
+            {isLoading ? "Adding..." : `Add ${isAdmin ? "Admin" : "Student"}`}
           </button>
         </form>
       </div>
@@ -249,13 +226,16 @@ export default function AddMember() {
                     S.No
                   </th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Member Type
+                    Role
                   </th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
                     Member ID
                   </th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Member Name
+                    Name
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    Email
                   </th>
                 </tr>
               </thead>
@@ -263,11 +243,20 @@ export default function AddMember() {
                 {recentMembers.map((member, index) => (
                   <tr key={member.id} className="border-t">
                     <td className="px-4 py-2 text-sm">{index + 1}</td>
-                    <td className="px-4 py-2 text-sm">{member.userType}</td>
                     <td className="px-4 py-2 text-sm">
-                      {member.admissionId || member.employeeId}
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        member.isAdmin 
+                          ? "bg-red-100 text-red-700" 
+                          : "bg-blue-100 text-blue-700"
+                      }`}>
+                        {member.isAdmin ? "Admin" : "Student"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-sm">
+                      {member.memberId || "N/A"}
                     </td>
                     <td className="px-4 py-2 text-sm">{member.userFullName}</td>
+                    <td className="px-4 py-2 text-sm">{member.email}</td>
                   </tr>
                 ))}
               </tbody>

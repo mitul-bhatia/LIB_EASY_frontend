@@ -5,8 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function SigninPage() {
   const { signin } = useAuth();
-  const [isStudent, setIsStudent] = useState(true);
-  const [form, setForm] = useState({ admissionId: "", employeeId: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -15,10 +14,7 @@ export default function SigninPage() {
     setError(null);
     setLoading(true);
     try {
-      const payload = isStudent 
-        ? { admissionId: form.admissionId, password: form.password }
-        : { employeeId: form.employeeId, password: form.password };
-      await signin(payload);
+      await signin(form);
     } catch (err) {
       setError(err.message || "Login failed");
     } finally {
@@ -33,54 +29,23 @@ export default function SigninPage() {
         className="bg-white p-8 rounded-2xl shadow-md w-96 space-y-4"
       >
         <h2 className="text-2xl font-bold text-center mb-4">Welcome Back</h2>
+        <p className="text-sm text-center text-gray-600 mb-6">Sign in to your library account</p>
 
-        {/* Toggle between Student and Staff */}
-        <div className="flex items-center justify-center space-x-3 mb-4">
-          <span className={`text-sm font-medium ${isStudent ? 'text-green-600' : 'text-gray-400'}`}>
-            Student
-          </span>
-          <button
-            type="button"
-            onClick={() => setIsStudent(!isStudent)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              isStudent ? 'bg-green-600' : 'bg-blue-600'
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                isStudent ? 'translate-x-1' : 'translate-x-6'
-              }`}
-            />
-          </button>
-          <span className={`text-sm font-medium ${!isStudent ? 'text-blue-600' : 'text-gray-400'}`}>
-            Staff
-          </span>
-        </div>
-
-        {isStudent ? (
-          <input
-            placeholder="Admission ID"
-            value={form.admissionId}
-            onChange={(e) => setForm({ ...form, admissionId: e.target.value })}
-            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-400"
-            required
-          />
-        ) : (
-          <input
-            placeholder="Employee ID"
-            value={form.employeeId}
-            onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
-            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-            required
-          />
-        )}
+        <input
+          placeholder="Email"
+          type="email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+          required
+        />
 
         <input
           placeholder="Password"
           type="password"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-400"
+          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
           required
         />
 
@@ -88,14 +53,14 @@ export default function SigninPage() {
 
         <button
           disabled={loading}
-          className={`w-full ${isStudent ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} text-white py-2 rounded-lg font-medium transition`}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
         >
           {loading ? "Signing In..." : "Sign In"}
         </button>
 
         <p className="text-sm text-center text-gray-500">
           Don't have an account?{" "}
-          <Link href="/signup" className={`${isStudent ? 'text-green-600' : 'text-blue-600'} hover:underline`}>
+          <Link href="/signup" className="text-blue-600 hover:underline">
             Create one
           </Link>
         </p>
