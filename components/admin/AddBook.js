@@ -1,0 +1,288 @@
+"use client";
+import { useState, useEffect } from "react";
+import api from "@/lib/axios";
+import { useAuth } from "@/context/AuthContext";
+
+export default function AddBook() {
+  const { user } = useAuth();
+  const [form, setForm] = useState({
+    bookName: "",
+    alternateTitle: "",
+    author: "",
+    bookCountAvailable: "",
+    language: "",
+    publisher: "",
+  });
+  const [allCategories, setAllCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [recentBooks, setRecentBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetchCategories();
+    fetchRecentBooks();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get("/categories/allcategories");
+      setAllCategories(res.data);
+    } catch (err) {
+      console.error("Failed to fetch categories:", err);
+    }
+  };
+
+  const fetchRecentBooks = async () => {
+    try {
+      const res = await api.get("/books/allbooks");
+      setRecentBooks(res.data.slice(0, 5));
+    } catch (err) {
+      console.error("Failed to fetch recent books:", err);
+    }
+  };
+
+  const handleCategoryToggle = (categoryId) => {
+    if (selectedCategories.includes(categoryId)) {
+      setSelectedCategories(selectedCategories.filter((id) => id !== categoryId));
+    } else {
+      setSelectedCategories([...selectedCategories, categoryId]);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setIsLoading(true);
+
+    // Validate required fields
+    if (!form.bookName || !form.author || !form.bookCountAvailable) {
+      setMessage("Book name, author, and available copies are required");
+      setIsLoading(false);
+      return;
+    }
+
+    if (parseInt(form.bookCountAvailable) < 0) {
+      setMessage("Available copies cannot be negative");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const payload = {
+        ...form,
+        bookCountAvailable: parseInt(form.bookCountAvailable),
+        categories: selectedCategories,
+        isAdmin: user?.isAdmin || false,
+      };
+
+      const res = await api.post("/books/addbook", payload);
+      setMessage("Book added successfully! 🎉");
+
+      // Update recent books
+      setRecentBooks([res.data, ...recentBooks.slice(0, 4)]);
+
+      // Clear form
+      setForm({
+        bookName: "",
+        alternateTitle: "",
+        author: "",
+        bookCountAvailable: "",
+        language: "",
+        publisher: "",
+      });
+      setSelectedCategories([]);
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Failed to add book");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Add New Book</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Book Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Book Name *
+            </label>
+            <input
+              type="text"
+              value={form.bookName}
+              onChange={(e) => setForm({ ...form, bookName: e.target.value })}
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              required
+            />
+          </div>
+
+          {/* Alternate Title */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Alternate Title
+            </label>
+            <input
+              type="text"
+              value={form.alternateTitle}
+              onChange={(e) => setForm({ ...form, alternateTitle: e.target.value })}
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Author */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Author Name *
+            </label>
+            <input
+              type="text"
+              value={form.author}
+              onChange={(e) => setForm({ ...form, author: e.target.value })}
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              required
+            />
+          </div>
+
+          {/* Language and Publisher */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Language
+              </label>
+              <input
+                type="text"
+                value={form.language}
+                onChange={(e) => setForm({ ...form, language: e.target.value })}
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Publisher
+              </label>
+              <input
+                type="text"
+                value={form.publisher}
+                onChange={(e) => setForm({ ...form, publisher: e.target.value })}
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+          </div>
+
+          {/* Available Copies */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              No. of Copies Available *
+            </label>
+            <input
+              type="number"
+              value={form.bookCountAvailable}
+              onChange={(e) =>
+                setForm({ ...form, bookCountAvailable: e.target.value })
+              }
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              min="0"
+              required
+            />
+          </div>
+
+          {/* Categories */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Categories *
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {allCategories.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => handleCategoryToggle(category.id)}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+                    selectedCategories.includes(category.id)
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  {category.categoryName}
+                </button>
+              ))}
+            </div>
+            {allCategories.length === 0 && (
+              <p className="text-sm text-gray-500 mt-2">
+                No categories available. Add categories first.
+              </p>
+            )}
+          </div>
+
+          {/* Message */}
+          {message && (
+            <div
+              className={`p-3 rounded-lg ${
+                message.includes("success")
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {message}
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`w-full py-2 px-4 rounded-lg font-medium text-white ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+          >
+            {isLoading ? "Adding Book..." : "Add Book"}
+          </button>
+        </form>
+      </div>
+
+      {/* Recently Added Books */}
+      {recentBooks.length > 0 && (
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Recently Added Books</h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border rounded-lg">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    S.No
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    Book Name
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    Author
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    Added Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentBooks.map((book, index) => (
+                  <tr key={book.id} className="border-t">
+                    <td className="px-4 py-2 text-sm">{index + 1}</td>
+                    <td className="px-4 py-2 text-sm">{book.bookName}</td>
+                    <td className="px-4 py-2 text-sm">{book.author}</td>
+                    <td className="px-4 py-2 text-sm">
+                      {new Date(book.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
