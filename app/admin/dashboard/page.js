@@ -6,6 +6,8 @@ import AddMember from "@/components/admin/AddMember";
 import GetMember from "@/components/admin/GetMember";
 import AddBook from "@/components/admin/AddBook";
 import ManageCategories from "@/components/admin/ManageCategories";
+import AddTransaction from "@/components/admin/AddTransaction";
+import ReturnBook from "@/components/admin/ReturnBook";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -77,6 +79,26 @@ export default function AdminDashboard() {
               >
                 View Members
               </button>
+              <button
+                onClick={() => setActiveTab("addtransaction")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                  activeTab === "addtransaction"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
+              >
+                Issue/Reserve
+              </button>
+              <button
+                onClick={() => setActiveTab("return")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                  activeTab === "return"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
+              >
+                Return Book
+              </button>
             </nav>
           </div>
 
@@ -86,6 +108,8 @@ export default function AdminDashboard() {
             {activeTab === "addbook" && <AddBook />}
             {activeTab === "addmember" && <AddMember />}
             {activeTab === "getmember" && <GetMember />}
+            {activeTab === "addtransaction" && <AddTransaction />}
+            {activeTab === "return" && <ReturnBook />}
           </div>
         </div>
       </div>
