@@ -39,106 +39,122 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 py-8">
-      <form
-        onSubmit={onSubmit}
-        className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md space-y-4"
-      >
-        <h2 className="text-2xl font-bold text-center mb-2">Create Account</h2>
-        <p className="text-sm text-center text-gray-600 mb-4">Join our library community</p>
-
-        {/* Role Selection Toggle */}
-        <div className="flex space-x-2 mb-4">
-          <button
-            type="button"
-            onClick={() => setIsAdmin(false)}
-            className={`flex-1 py-2 rounded-lg font-medium transition ${
-              !isAdmin
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            Student
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsAdmin(true)}
-            className={`flex-1 py-2 rounded-lg font-medium transition ${
-              isAdmin
-                ? "bg-red-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            Admin
-          </button>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-md mx-auto px-6 py-16">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Create account</h1>
+          <p className="text-slate-600">Join the library</p>
         </div>
 
-        <input
-          placeholder="Full Name"
-          value={form.userFullName}
-          onChange={(e) => setForm({ ...form, userFullName: e.target.value })}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-          required
-        />
-
-        <input
-          placeholder="Member ID (Optional)"
-          value={form.memberId}
-          onChange={(e) => setForm({ ...form, memberId: e.target.value })}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-        />
-
-        <input
-          placeholder="Email"
-          type="email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-          required
-        />
-
-        <input
-          placeholder="Password (min 6 characters)"
-          type="password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-          required
-          minLength={6}
-        />
-
-        <input
-          placeholder="Mobile Number"
-          type="tel"
-          value={form.mobileNumber}
-          onChange={(e) => setForm({ ...form, mobileNumber: e.target.value })}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-          required
-        />
-
-        {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600 font-medium">Error:</p>
-            <p className="text-sm text-red-600">{error}</p>
+        <form onSubmit={onSubmit} className="space-y-4">
+          {/* Role Toggle */}
+          <div className="flex gap-2 p-1 bg-slate-100 rounded-lg">
+            <button
+              type="button"
+              onClick={() => setIsAdmin(false)}
+              className={`flex-1 py-2 rounded-md text-sm font-medium transition ${
+                !isAdmin ? "bg-white shadow-sm" : "text-slate-600"
+              }`}
+            >
+              Member
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsAdmin(true)}
+              className={`flex-1 py-2 rounded-md text-sm font-medium transition ${
+                isAdmin ? "bg-white shadow-sm" : "text-slate-600"
+              }`}
+            >
+              Admin
+            </button>
           </div>
-        )}
 
-        <button
-          disabled={loading}
-          className={`w-full ${
-            isAdmin ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
-          } text-white py-2 rounded-lg font-medium transition`}
-        >
-          {loading ? "Creating..." : `Sign Up as ${isAdmin ? "Admin" : "Student"}`}
-        </button>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Full Name
+            </label>
+            <input
+              value={form.userFullName}
+              onChange={(e) => setForm({ ...form, userFullName: e.target.value })}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+              required
+            />
+          </div>
 
-        <p className="text-sm text-center text-gray-500">
-          Already have an account?{" "}
-          <Link href="/signin" className="text-blue-600 hover:underline">
-            Sign In
-          </Link>
-        </p>
-      </form>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+              required
+              minLength={6}
+            />
+            <p className="text-xs text-slate-500 mt-1">At least 6 characters</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Mobile Number
+            </label>
+            <input
+              type="tel"
+              value={form.mobileNumber}
+              onChange={(e) => setForm({ ...form, mobileNumber: e.target.value })}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Member ID <span className="text-slate-400">(optional)</span>
+            </label>
+            <input
+              value={form.memberId}
+              onChange={(e) => setForm({ ...form, memberId: e.target.value })}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+            />
+          </div>
+
+          {error && (
+            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-slate-900 text-white py-3 rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50"
+          >
+            {loading ? "Creating account..." : "Create account"}
+          </button>
+
+          <p className="text-center text-sm text-slate-600">
+            Already have an account?{" "}
+            <Link href="/signin" className="text-slate-900 font-medium hover:underline">
+              Sign in
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

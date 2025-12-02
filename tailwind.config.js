@@ -9,15 +9,19 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			'ibm-plex-sans': [
-  				'IBM Plex Sans',
-  				'sans-serif'
-  			],
-  			'bebas-neue': [
-  				'var(--bebas-neue)'
-  			]
+  			sans: ['Inter', 'sans-serif'],
+  			serif: ['Merriweather', 'serif'],
+  			'ibm-plex-sans': ['IBM Plex Sans', 'sans-serif'],
+  			'bebas-neue': ['var(--bebas-neue)']
   		},
   		colors: {
+  			library: {
+  				50: '#f4f7fa',
+  				100: '#e0e7f1',
+  				600: '#2c5282',
+  				800: '#1a365d',
+  				900: '#152c4e',
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

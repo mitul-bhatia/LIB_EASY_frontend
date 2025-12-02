@@ -70,138 +70,97 @@ export default function AllBooksPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Loading books...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Library Catalog</h1>
-          <p className="text-gray-600 mt-1">
-            Browse our collection of {allBooks.length} books
-          </p>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Browse Books</h1>
+          <p className="text-slate-600">{allBooks.length} books available</p>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Category Filter */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Filter by Category
-          </label>
-          <div className="flex flex-wrap gap-2">
+        {/* Category Pills */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          <button
+            onClick={() => filterByCategory("All")}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+              selectedCategory === "All"
+                ? "bg-slate-900 text-white"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            All
+          </button>
+          {categories.map((cat) => (
             <button
-              onClick={() => filterByCategory("All")}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
-                selectedCategory === "All"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 border hover:bg-gray-50"
+              key={cat.id}
+              onClick={() => filterByCategory(cat.id)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                selectedCategory === cat.categoryName
+                  ? "bg-slate-900 text-white"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
               }`}
             >
-              All Categories ({allBooks.length})
+              {cat.categoryName}
             </button>
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => filterByCategory(category.id)}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  selectedCategory === category.categoryName
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-700 border hover:bg-gray-50"
-                }`}
-              >
-                {category.categoryName} ({category.books.length})
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
 
         {/* Books Grid */}
         {filteredBooks.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {filteredBooks.map((book) => (
-              <div
-                key={book.id}
-                className="bg-white rounded-lg shadow hover:shadow-lg transition p-4"
-              >
-                {/* Book Cover Placeholder */}
-                <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg mb-4 flex items-center justify-center">
-                  <span className="text-4xl">📚</span>
+              <div key={book.id} className="group">
+                {/* Book Cover */}
+                <div className="bg-slate-100 rounded-lg aspect-[2/3] mb-3 flex items-center justify-center group-hover:bg-slate-200 transition">
+                  <span className="text-5xl">📚</span>
                 </div>
 
                 {/* Book Info */}
-                <h3 className="font-semibold text-lg mb-1 line-clamp-2">
+                <h3 className="font-semibold text-sm line-clamp-2 text-slate-900 mb-1">
                   {book.bookName}
                 </h3>
-                <p className="text-sm text-gray-600 mb-2">by {book.author}</p>
+                <p className="text-xs text-slate-500 mb-2">{book.author}</p>
 
-                {book.alternateTitle && (
-                  <p className="text-xs text-gray-500 mb-2 italic">
-                    {book.alternateTitle}
-                  </p>
-                )}
-
-                {/* Status Badge */}
-                <div className="flex items-center justify-between mt-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      getBookStatus(book) === "Available"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {getBookStatus(book)}
+                {/* Availability */}
+                <div className="flex items-center justify-between text-xs mb-3">
+                  <span className={`font-medium ${
+                    book.bookCountAvailable > 0 ? "text-green-600" : "text-red-600"
+                  }`}>
+                    {book.bookCountAvailable > 0 ? "Available" : "Unavailable"}
                   </span>
-                  <span className="text-sm text-gray-600">
-                    {book.bookCountAvailable} copies
-                  </span>
+                  <span className="text-slate-500">{book.bookCountAvailable} left</span>
                 </div>
 
-                {/* Additional Info */}
-                {(book.language || book.publisher) && (
-                  <div className="mt-3 pt-3 border-t text-xs text-gray-500">
-                    {book.language && <p>Language: {book.language}</p>}
-                    {book.publisher && <p>Publisher: {book.publisher}</p>}
-                  </div>
-                )}
-
-                {/* Request Book Button - Only for Students */}
+                {/* Action Button */}
                 {user && !user.isAdmin && (
                   <button
                     onClick={() => handleRequestBook(book)}
-                    className={`mt-3 w-full py-2 rounded-lg font-medium transition ${
-                      book.bookCountAvailable > 0
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                        : "bg-yellow-600 text-white hover:bg-yellow-700"
-                    }`}
+                    className="w-full py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
                   >
-                    {book.bookCountAvailable > 0
-                      ? "Request Book"
-                      : "Request (Waitlist)"}
+                    Request
                   </button>
                 )}
 
-                {/* Sign In Prompt for Guests */}
                 {!user && (
                   <button
                     onClick={() => router.push("/signin")}
-                    className="mt-3 w-full py-2 rounded-lg font-medium bg-gray-600 text-white hover:bg-gray-700 transition"
+                    className="w-full py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 transition"
                   >
-                    Sign In to Request
+                    Sign in
                   </button>
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
-              No books found in this category
-            </p>
+          <div className="text-center py-16">
+            <p className="text-slate-500">No books in this category</p>
           </div>
         )}
       </div>

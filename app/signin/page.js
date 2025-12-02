@@ -23,48 +23,62 @@ export default function SigninPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-      <form
-        onSubmit={onSubmit}
-        className="bg-white p-8 rounded-2xl shadow-md w-96 space-y-4"
-      >
-        <h2 className="text-2xl font-bold text-center mb-4">Welcome Back</h2>
-        <p className="text-sm text-center text-gray-600 mb-6">Sign in to your library account</p>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-md mx-auto px-6 py-16">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Sign in</h1>
+          <p className="text-slate-600">Access your library account</p>
+        </div>
 
-        <input
-          placeholder="Email"
-          type="email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-          required
-        />
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+              required
+            />
+          </div>
 
-        <input
-          placeholder="Password"
-          type="password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-          required
-        />
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+              required
+            />
+          </div>
 
-        {error && <div className="text-sm text-red-600">{error}</div>}
+          {error && (
+            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+              {error}
+            </div>
+          )}
 
-        <button
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
-        >
-          {loading ? "Signing In..." : "Sign In"}
-        </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-slate-900 text-white py-3 rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50"
+          >
+            {loading ? "Signing in..." : "Sign in"}
+          </button>
 
-        <p className="text-sm text-center text-gray-500">
-          Don't have an account?{" "}
-          <Link href="/signup" className="text-blue-600 hover:underline">
-            Create one
-          </Link>
-        </p>
-      </form>
+          <p className="text-center text-sm text-slate-600">
+            Don't have an account?{" "}
+            <Link href="/signup" className="text-slate-900 font-medium hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
