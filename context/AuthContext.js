@@ -12,14 +12,16 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
   async function signup(payload) {
-    // payload: { name, email, password, role? }
-    const res = await api.post("/auth/signup", payload).catch((err) => {
-      throw err.response?.data || { message: "signup failed" };
-    });
-
-    setUser(res.data.user || null);
-    router.push("/");
-    return res.data;
+    try {
+      const res = await api.post("/auth/signup", payload);
+      setUser(res.data.user || null);
+      router.push("/");
+      return res.data;
+    } catch (err) {
+      console.error("Signup error:", err);
+      const errorMessage = err.response?.data?.message || err.message || "Signup failed";
+      throw new Error(errorMessage);
+    }
   }
 
   async function signin(payload) {
