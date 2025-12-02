@@ -8,8 +8,26 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
+
+  // Check for existing session on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await api.get("/auth/me");
+        setUser(res.data.user);
+      } catch (err) {
+        // No valid session, user stays null
+        console.log("No active session");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkSession();
+  }, []);
 
   async function signup(payload) {
     try {
@@ -41,13 +59,23 @@ export const AuthProvider = ({ children }) => {
     router.push("/signin")
   }
 
+  // Show loading state while checking session
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <AuthContext.Provider value={{ user, setUser , signup , signin, logout }}>
+    <AuthContext.Provider value={{ user, setUser, signup, signin, logout, loading }}>
       {children}
     </AuthContext.Provider>
-  )
-
-
+  );
 };
 
 export function useAuth(){
