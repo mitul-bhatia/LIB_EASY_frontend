@@ -17,10 +17,30 @@ export default function ReturnBook() {
   const fetchActiveTransactions = async () => {
     try {
       const res = await api.get("/transactions/all-transactions");
-      const active = res.data.filter((tx) => tx.transactionStatus === "Active");
+      const active = res.data.filter((tx) => 
+        tx.transactionStatus === "Active" || tx.transactionStatus === "Reserved"
+      );
       setActiveTransactions(active);
     } catch (err) {
       console.error("Failed to fetch transactions:", err);
+    }
+  };
+
+  const handleMarkIssued = async (transactionId) => {
+    setIsLoading(true);
+    setMessage("");
+
+    try {
+      const res = await api.post(`/transactions/mark-issued/${transactionId}`, {
+        isAdmin: user?.isAdmin || false,
+      });
+
+      setMessage("Book marked as issued successfully");
+      fetchActiveTransactions();
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Failed to mark as issued");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -112,6 +132,9 @@ export default function ReturnBook() {
                     Fine
                   </th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    Status
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
                     Action
                   </th>
                 </tr>
@@ -156,17 +179,42 @@ export default function ReturnBook() {
                         </span>
                       </td>
                       <td className="px-4 py-2 text-sm">
-                        <button
-                          onClick={() => handleReturn(tx)}
-                          disabled={isLoading}
-                          className={`px-3 py-1 rounded text-sm font-medium ${
-                            isLoading
-                              ? "bg-gray-300 cursor-not-allowed"
-                              : "bg-blue-600 text-white hover:bg-blue-700"
+                        <span
+                          className={`px-2 py-1 rounded text-xs font-medium ${
+                            tx.transactionStatus === "Reserved"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-blue-100 text-blue-700"
                           }`}
                         >
-                          Return
-                        </button>
+                          {tx.transactionStatus === "Reserved" ? "Ready for Pickup" : "Issued"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-sm">
+                        {tx.transactionStatus === "Reserved" ? (
+                          <button
+                            onClick={() => handleMarkIssued(tx.id)}
+                            disabled={isLoading}
+                            className={`px-3 py-1 rounded text-sm font-medium ${
+                              isLoading
+                                ? "bg-gray-300 cursor-not-allowed"
+                                : "bg-green-600 text-white hover:bg-green-700"
+                            }`}
+                          >
+                            Mark as Issued
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleReturn(tx)}
+                            disabled={isLoading}
+                            className={`px-3 py-1 rounded text-sm font-medium ${
+                              isLoading
+                                ? "bg-gray-300 cursor-not-allowed"
+                                : "bg-blue-600 text-white hover:bg-blue-700"
+                            }`}
+                          >
+                            Return
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );

@@ -63,7 +63,7 @@ export default function AddTransaction() {
     try {
       const payload = {
         bookId: selectedBook.id,
-        borrowerId: selectedMember.admissionId || selectedMember.employeeId,
+        borrowerId: selectedMember.memberId || selectedMember.email,
         bookName: selectedBook.bookName,
         borrowerName: selectedMember.userFullName,
         transactionType,
@@ -123,7 +123,7 @@ export default function AddTransaction() {
             <option value="">-- Select a member --</option>
             {allMembers.map((member) => (
               <option key={member.id} value={member.id}>
-                {member.userFullName} [{member.admissionId || member.employeeId}]
+                {member.userFullName} [{member.memberId || member.email}]
               </option>
             ))}
           </select>

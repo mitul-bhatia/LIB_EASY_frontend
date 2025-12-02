@@ -1,13 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import api from "@/lib/axios";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AllBooksPage() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [allBooks, setAllBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
+  const [requestingBookId, setRequestingBookId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -45,6 +50,33 @@ export default function AllBooksPage() {
 
   const getBookStatus = (book) => {
     return book.bookCountAvailable > 0 ? "Available" : "Unavailable";
+  };
+
+  const handleRequestBook = async (bookId) => {
+    if (!user) {
+      router.push("/signin");
+      return;
+    }
+
+    if (user.isAdmin) {
+      alert("Admins cannot request books. Please use the Issue/Reserve feature in admin dashboard.");
+      return;
+    }
+
+    setRequestingBookId(bookId);
+    try {
+      const res = await api.post("/transactions/request-book", {
+        bookId,
+        userId: user.id,
+      });
+      alert(res.data.message || "Book request submitted successfully!");
+      // Optionally refresh books to update UI
+      fetchData();
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to request book");
+    } finally {
+      setRequestingBookId(null);
+    }
   };
 
   if (isLoading) {
@@ -147,6 +179,37 @@ export default function AllBooksPage() {
                     {book.language && <p>Language: {book.language}</p>}
                     {book.publisher && <p>Publisher: {book.publisher}</p>}
                   </div>
+                )}
+
+                {/* Request Book Button - Only for Students */}
+                {user && !user.isAdmin && (
+                  <button
+                    onClick={() => handleRequestBook(book.id)}
+                    disabled={requestingBookId === book.id}
+                    className={`mt-3 w-full py-2 rounded-lg font-medium transition ${
+                      requestingBookId === book.id
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : book.bookCountAvailable > 0
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-yellow-600 text-white hover:bg-yellow-700"
+                    }`}
+                  >
+                    {requestingBookId === book.id
+                      ? "Requesting..."
+                      : book.bookCountAvailable > 0
+                      ? "Request Book"
+                      : "Join Waitlist"}
+                  </button>
+                )}
+
+                {/* Sign In Prompt for Guests */}
+                {!user && (
+                  <button
+                    onClick={() => router.push("/signin")}
+                    className="mt-3 w-full py-2 rounded-lg font-medium bg-gray-600 text-white hover:bg-gray-700 transition"
+                  >
+                    Sign In to Request
+                  </button>
                 )}
               </div>
             ))}

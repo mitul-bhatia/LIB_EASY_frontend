@@ -88,7 +88,7 @@ export default function GetMember() {
             <option value="">-- Select a member --</option>
             {allMembers.map((member) => (
               <option key={member.id} value={member.id}>
-                {member.userFullName} [{member.admissionId || member.employeeId}]
+                {member.userFullName} [{member.memberId || member.email}]
               </option>
             ))}
           </select>
@@ -113,13 +113,21 @@ export default function GetMember() {
                   <p className="font-medium">{memberDetails.userFullName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">User Type</p>
-                  <p className="font-medium">{memberDetails.userType}</p>
+                  <p className="text-sm text-gray-600">Role</p>
+                  <p className="font-medium">
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      memberDetails.isAdmin 
+                        ? "bg-red-100 text-red-700" 
+                        : "bg-blue-100 text-blue-700"
+                    }`}>
+                      {memberDetails.isAdmin ? "Admin" : "Student"}
+                    </span>
+                  </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">ID</p>
+                  <p className="text-sm text-gray-600">Member ID</p>
                   <p className="font-medium">
-                    {memberDetails.admissionId || memberDetails.employeeId}
+                    {memberDetails.memberId || "N/A"}
                   </p>
                 </div>
                 <div>

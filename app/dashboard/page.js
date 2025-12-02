@@ -37,17 +37,38 @@ export default function MemberDashboard() {
     return diffDays > 0 ? diffDays * 10 : 0;
   };
 
+  const pendingTransactions =
+    memberDetails?.activeTransactions?.filter(
+      (t) => t && t.transactionStatus === "Pending"
+    ) || [];
+
+  const reservedTransactions =
+    memberDetails?.activeTransactions?.filter(
+      (t) => t && t.transactionType === "Reserved" && t.transactionStatus === "Reserved"
+    ) || [];
+
   const issuedTransactions =
     memberDetails?.activeTransactions?.filter(
       (t) => t && t.transactionType === "Issued" && t.transactionStatus === "Active"
     ) || [];
 
-  const reservedTransactions =
-    memberDetails?.activeTransactions?.filter(
-      (t) => t && t.transactionType === "Reserved" && t.transactionStatus === "Active"
-    ) || [];
-
   const previousTransactions = memberDetails?.prevTransactions || [];
+
+  const handleCancelRequest = async (transactionId) => {
+    if (!confirm("Are you sure you want to cancel this request?")) {
+      return;
+    }
+
+    try {
+      await api.post(`/transactions/cancel/${transactionId}`, {
+        userId: user.id,
+      });
+      alert("Request cancelled successfully");
+      fetchMemberDetails();
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to cancel request");
+    }
+  };
 
   if (!user || user.isAdmin) return null;
 
@@ -83,14 +104,19 @@ export default function MemberDashboard() {
                 Profile
               </button>
               <button
-                onClick={() => setActiveTab("issued")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === "issued"
+                onClick={() => setActiveTab("pending")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm relative ${
+                  activeTab === "pending"
                     ? "border-blue-500 text-blue-600"
                     : "border-transparent text-gray-500 hover:text-gray-700"
                 }`}
               >
-                Issued Books
+                Pending Requests
+                {pendingTransactions.length > 0 && (
+                  <span className="ml-1 px-2 py-0.5 text-xs bg-yellow-500 text-white rounded-full">
+                    {pendingTransactions.length}
+                  </span>
+                )}
               </button>
               <button
                 onClick={() => setActiveTab("reserved")}
@@ -100,7 +126,17 @@ export default function MemberDashboard() {
                     : "border-transparent text-gray-500 hover:text-gray-700"
                 }`}
               >
-                Reserved Books
+                Ready for Pickup
+              </button>
+              <button
+                onClick={() => setActiveTab("issued")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === "issued"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Issued Books
               </button>
               <button
                 onClick={() => setActiveTab("history")}
@@ -126,13 +162,13 @@ export default function MemberDashboard() {
                       <p className="font-medium">{memberDetails.userFullName}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">User Type</p>
-                      <p className="font-medium">{memberDetails.userType}</p>
+                      <p className="text-sm text-gray-600">Role</p>
+                      <p className="font-medium">{memberDetails.isAdmin ? "Admin" : "Student"}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">ID</p>
+                      <p className="text-sm text-gray-600">Member ID</p>
                       <p className="font-medium">
-                        {memberDetails.admissionId || memberDetails.employeeId}
+                        {memberDetails.memberId || "N/A"}
                       </p>
                     </div>
                     <div>
@@ -152,18 +188,24 @@ export default function MemberDashboard() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-blue-600">
-                      {issuedTransactions.length}
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="bg-yellow-50 p-4 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-yellow-600">
+                      {pendingTransactions.length}
                     </p>
-                    <p className="text-sm text-gray-600">Active Issued</p>
+                    <p className="text-sm text-gray-600">Pending</p>
                   </div>
                   <div className="bg-green-50 p-4 rounded-lg text-center">
                     <p className="text-3xl font-bold text-green-600">
                       {reservedTransactions.length}
                     </p>
-                    <p className="text-sm text-gray-600">Active Reserved</p>
+                    <p className="text-sm text-gray-600">Ready</p>
+                  </div>
+                  <div className="bg-blue-50 p-4 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-blue-600">
+                      {issuedTransactions.length}
+                    </p>
+                    <p className="text-sm text-gray-600">Issued</p>
                   </div>
                   <div className="bg-purple-50 p-4 rounded-lg text-center">
                     <p className="text-3xl font-bold text-purple-600">
@@ -172,6 +214,100 @@ export default function MemberDashboard() {
                     <p className="text-sm text-gray-600">Completed</p>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {activeTab === "pending" && (
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Pending Requests</h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  These are your book requests waiting for admin approval.
+                </p>
+                {pendingTransactions.length > 0 ? (
+                  <table className="min-w-full bg-white border rounded-lg">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Requested On</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Status</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pendingTransactions.map((tx, index) => (
+                        <tr key={tx.id} className="border-t">
+                          <td className="px-4 py-2 text-sm">{index + 1}</td>
+                          <td className="px-4 py-2 text-sm font-medium">{tx.bookName}</td>
+                          <td className="px-4 py-2 text-sm">
+                            {new Date(tx.createdAt).toLocaleDateString()}
+                          </td>
+                          <td className="px-4 py-2 text-sm">
+                            <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">
+                              Pending Approval
+                            </span>
+                          </td>
+                          <td className="px-4 py-2 text-sm">
+                            <button
+                              onClick={() => handleCancelRequest(tx.id)}
+                              className="text-red-600 hover:text-red-700 font-medium text-sm"
+                            >
+                              Cancel
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <p className="text-gray-500">No pending requests</p>
+                    <p className="text-sm text-gray-400 mt-2">
+                      Browse books and click "Request Book" to get started
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === "reserved" && (
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Ready for Pickup</h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  These books have been approved and are ready for you to pick up from the library.
+                </p>
+                {reservedTransactions.length > 0 ? (
+                  <table className="min-w-full bg-white border rounded-lg">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Approved On</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Valid Until</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reservedTransactions.map((tx, index) => (
+                        <tr key={tx.id} className="border-t bg-green-50">
+                          <td className="px-4 py-2 text-sm">{index + 1}</td>
+                          <td className="px-4 py-2 text-sm font-medium">{tx.bookName}</td>
+                          <td className="px-4 py-2 text-sm">{tx.fromDate}</td>
+                          <td className="px-4 py-2 text-sm">{tx.toDate}</td>
+                          <td className="px-4 py-2 text-sm">
+                            <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
+                              ✓ Ready for Pickup
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <p className="text-gray-500">No books ready for pickup</p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -214,35 +350,7 @@ export default function MemberDashboard() {
               </div>
             )}
 
-            {activeTab === "reserved" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Reserved Books</h2>
-                {reservedTransactions.length > 0 ? (
-                  <table className="min-w-full bg-white border rounded-lg">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">From Date</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">To Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {reservedTransactions.map((tx, index) => (
-                        <tr key={tx.id} className="border-t">
-                          <td className="px-4 py-2 text-sm">{index + 1}</td>
-                          <td className="px-4 py-2 text-sm">{tx.bookName}</td>
-                          <td className="px-4 py-2 text-sm">{tx.fromDate}</td>
-                          <td className="px-4 py-2 text-sm">{tx.toDate}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p className="text-gray-500 text-center py-8">No reserved books</p>
-                )}
-              </div>
-            )}
+
 
             {activeTab === "history" && (
               <div>
