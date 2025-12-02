@@ -117,8 +117,18 @@ export default function AllBooksPage() {
             {filteredBooks.map((book) => (
               <div key={book.id} className="group">
                 {/* Book Cover */}
-                <div className="bg-slate-100 rounded-lg aspect-[2/3] mb-3 flex items-center justify-center group-hover:bg-slate-200 transition">
-                  <span className="text-5xl">📚</span>
+                <div className="bg-slate-100 rounded-lg aspect-[2/3] mb-3 overflow-hidden group-hover:shadow-lg transition">
+                  {book.coverURL ? (
+                    <img 
+                      src={book.coverURL} 
+                      alt={book.bookName}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-5xl">📚</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Book Info */}

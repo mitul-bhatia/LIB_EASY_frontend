@@ -113,8 +113,18 @@ export default function HomePage() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {recentBooks.map((book) => (
             <div key={book.id} className="group">
-              <div className="bg-slate-100 rounded-lg aspect-[2/3] mb-2 flex items-center justify-center group-hover:bg-slate-200 transition">
-                <span className="text-4xl">📚</span>
+              <div className="bg-slate-100 rounded-lg aspect-[2/3] mb-2 overflow-hidden group-hover:shadow-lg transition">
+                {book.coverURL ? (
+                  <img 
+                    src={book.coverURL} 
+                    alt={book.bookName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-4xl">📚</span>
+                  </div>
+                )}
               </div>
               <h3 className="font-medium text-sm line-clamp-2 text-slate-900">
                 {book.bookName}

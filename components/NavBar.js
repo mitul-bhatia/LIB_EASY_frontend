@@ -30,7 +30,7 @@ export default function NavBar() {
                 href={user.isAdmin ? "/admin/dashboard" : "/dashboard"} 
                 className="text-gray-600 hover:text-library-800 font-medium text-sm transition"
               >
-                {user.isAdmin ? "Admin Panel" : "My Loans"}
+                {user.isAdmin ? "Admin Panel" : "Member Panel"}
               </Link>
             )}
           </div>

@@ -12,6 +12,7 @@ export default function AddBook() {
     bookCountAvailable: "",
     language: "",
     publisher: "",
+    coverURL: "",
   });
   const [allCategories, setAllCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -90,6 +91,7 @@ export default function AddBook() {
         bookCountAvailable: "",
         language: "",
         publisher: "",
+        coverURL: "",
       });
       setSelectedCategories([]);
     } catch (err) {
@@ -187,6 +189,23 @@ export default function AddBook() {
               min="0"
               required
             />
+          </div>
+
+          {/* Cover URL */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Cover Image URL
+            </label>
+            <input
+              type="url"
+              value={form.coverURL}
+              onChange={(e) => setForm({ ...form, coverURL: e.target.value })}
+              placeholder="https://example.com/book-cover.jpg"
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Optional: Add a URL to the book cover image
+            </p>
           </div>
 
           {/* Categories */}
