@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import GetMember from "@/components/admin/GetMember";
 import AddBook from "@/components/admin/AddBook";
+import ManageBooks from "@/components/admin/ManageBooks";
 import ManageCategories from "@/components/admin/ManageCategories";
 import AddTransaction from "@/components/admin/AddTransaction";
 import ReturnBook from "@/components/admin/ReturnBook";
@@ -70,6 +71,16 @@ export default function AdminDashboard() {
                 Add Book
               </button>
               <button
+                onClick={() => setActiveTab("managebooks")}
+                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                  activeTab === "managebooks"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
+              >
+                Manage Books
+              </button>
+              <button
                 onClick={() => setActiveTab("getmember")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                   activeTab === "getmember"
@@ -107,6 +118,7 @@ export default function AdminDashboard() {
             {activeTab === "requests" && <ApproveRequests />}
             {activeTab === "categories" && <ManageCategories />}
             {activeTab === "addbook" && <AddBook />}
+            {activeTab === "managebooks" && <ManageBooks />}
             {activeTab === "getmember" && <GetMember />}
             {activeTab === "addtransaction" && <AddTransaction />}
             {activeTab === "return" && <ReturnBook />}
