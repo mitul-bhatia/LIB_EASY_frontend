@@ -23,13 +23,13 @@ export default function AddTransaction() {
   const fetchData = async () => {
     try {
       const [membersRes, booksRes, transactionsRes] = await Promise.all([
-        api.get("/users/allmembers"),
-        api.get("/books/allbooks"),
-        api.get("/transactions/all-transactions"),
+        api.get("/users/allmembers", { params: { limit: 100 } }),
+        api.get("/books/allbooks", { params: { limit: 100 } }),
+        api.get("/transactions/all-transactions", { params: { page: 1, limit: 5, sortBy: 'createdAt', sortOrder: 'desc' } }),
       ]);
-      setAllMembers(membersRes.data);
-      setAllBooks(booksRes.data);
-      setRecentTransactions(transactionsRes.data.slice(0, 5));
+      setAllMembers(membersRes.data.users || membersRes.data);
+      setAllBooks(booksRes.data.books || booksRes.data);
+      setRecentTransactions(transactionsRes.data.transactions || transactionsRes.data);
     } catch (err) {
       console.error("Failed to fetch data:", err);
     }

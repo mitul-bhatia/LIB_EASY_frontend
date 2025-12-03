@@ -16,9 +16,11 @@ export default function ReturnBook() {
 
   const fetchActiveTransactions = async () => {
     try {
-      const res = await api.get("/transactions/all-transactions");
-      const active = res.data.filter((tx) => tx.transactionStatus === "Active");
-      setActiveTransactions(active);
+      const res = await api.get("/transactions/all-transactions", {
+        params: { status: "Active", limit: 100 }
+      });
+      const transactions = res.data.transactions || res.data;
+      setActiveTransactions(transactions);
     } catch (err) {
       console.error("Failed to fetch transactions:", err);
     }

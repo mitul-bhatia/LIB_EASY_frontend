@@ -36,8 +36,11 @@ export default function AddBook() {
 
   const fetchRecentBooks = async () => {
     try {
-      const res = await api.get("/books/allbooks");
-      setRecentBooks(res.data.slice(0, 5));
+      const res = await api.get("/books/allbooks", {
+        params: { page: 1, limit: 5, sortBy: 'createdAt', sortOrder: 'desc' }
+      });
+      const books = res.data.books || res.data;
+      setRecentBooks(books);
     } catch (err) {
       console.error("Failed to fetch recent books:", err);
     }

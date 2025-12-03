@@ -45,13 +45,8 @@ export default function RequestBookPage() {
 
   const fetchBook = async () => {
     try {
-      const res = await api.get("/books/allbooks");
-      const foundBook = res.data.find((b) => b.id === bookId);
-      if (!foundBook) {
-        setError("Book not found");
-        return;
-      }
-      setBook(foundBook);
+      const res = await api.get(`/books/getbook/${bookId}`);
+      setBook(res.data);
     } catch (err) {
       setError("Failed to load book details");
     } finally {

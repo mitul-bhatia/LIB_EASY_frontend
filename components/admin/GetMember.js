@@ -15,8 +15,11 @@ export default function GetMember() {
 
   const fetchAllMembers = async () => {
     try {
-      const res = await api.get("/users/allmembers");
-      setAllMembers(res.data);
+      const res = await api.get("/users/allmembers", {
+        params: { limit: 100 }
+      });
+      const members = res.data.users || res.data;
+      setAllMembers(members);
     } catch (err) {
       console.error("Failed to fetch members:", err);
     }

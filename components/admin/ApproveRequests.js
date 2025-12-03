@@ -15,11 +15,13 @@ export default function ApproveRequests() {
 
   const fetchPendingRequests = async () => {
     try {
-      const res = await api.get("/transactions/all-transactions");
-      const pending = res.data.filter((tx) => tx.transactionStatus === "Pending");
+      const res = await api.get("/transactions/all-transactions", {
+        params: { status: "Pending", limit: 100 }
+      });
+      const transactions = res.data.transactions || res.data;
       // Sort by creation date (newest first)
-      pending.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setPendingRequests(pending);
+      transactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setPendingRequests(transactions);
     } catch (err) {
       console.error("Failed to fetch pending requests:", err);
     }

@@ -7,25 +7,45 @@ import { useAuth } from "@/context/AuthContext";
 export default function AllBooksPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const [allBooks, setAllBooks] = useState([]);
-  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [books, setBooks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page, selectedCategory, debouncedSearch]);
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
+      const params = { page, limit: 15 };
+      if (selectedCategory !== "All") {
+        params.category = selectedCategory;
+      }
+      if (debouncedSearch) {
+        params.search = debouncedSearch;
+      }
+
       const [booksRes, categoriesRes] = await Promise.all([
-        api.get("/books/allbooks"),
+        api.get("/books/allbooks", { params }),
         api.get("/categories/allcategories"),
       ]);
-      setAllBooks(booksRes.data);
-      setFilteredBooks(booksRes.data);
-      setCategories(categoriesRes.data);
+      
+      setBooks(booksRes.data.books || booksRes.data);
+      setPagination(booksRes.data.pagination);
+      setCategories(categoriesRes.data || categoriesRes);
     } catch (err) {
       console.error("Failed to fetch data:", err);
     } finally {
@@ -34,17 +54,13 @@ export default function AllBooksPage() {
   };
 
   const filterByCategory = (categoryId) => {
-    if (categoryId === "All") {
-      setFilteredBooks(allBooks);
-      setSelectedCategory("All");
-    } else {
-      const filtered = allBooks.filter((book) =>
-        book.categories.includes(categoryId)
-      );
-      setFilteredBooks(filtered);
-      const category = categories.find((c) => c.id === categoryId);
-      setSelectedCategory(category?.categoryName || "All");
-    }
+    setSelectedCategory(categoryId);
+    setPage(1);
+  };
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    setPage(1);
   };
 
   const getBookStatus = (book) => {
@@ -81,7 +97,18 @@ export default function AllBooksPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Browse Books</h1>
-          <p className="text-slate-600">{allBooks.length} books available</p>
+          <p className="text-slate-600">{pagination?.totalBooks || books.length} books available</p>
+        </div>
+
+        {/* Search Bar */}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search books by name or author..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none"
+          />
         </div>
 
         {/* Category Pills */}
@@ -112,9 +139,10 @@ export default function AllBooksPage() {
         </div>
 
         {/* Books Grid */}
-        {filteredBooks.length > 0 ? (
+        {books.length > 0 ? (
+          <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {filteredBooks.map((book) => (
+            {books.map((book) => (
               <div key={book.id} className="group">
                 {/* Book Cover */}
                 <div className="bg-slate-100 rounded-lg aspect-[2/3] mb-3 overflow-hidden group-hover:shadow-lg transition">
@@ -168,9 +196,33 @@ export default function AllBooksPage() {
               </div>
             ))}
           </div>
+
+          {/* Pagination */}
+          {pagination && pagination.totalPages > 1 && (
+            <div className="flex justify-center gap-2 mt-8">
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="px-4 py-2 border rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span className="px-4 py-2">
+                Page {page} of {pagination.totalPages}
+              </span>
+              <button
+                onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
+                disabled={page === pagination.totalPages}
+                className="px-4 py-2 border rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
+          </>
         ) : (
           <div className="text-center py-16">
-            <p className="text-slate-500">No books in this category</p>
+            <p className="text-slate-500">No books found</p>
           </div>
         )}
       </div>

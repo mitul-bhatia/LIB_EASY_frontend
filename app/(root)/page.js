@@ -24,13 +24,17 @@ export default function HomePage() {
         api.get("/transactions/all-transactions"),
       ]);
 
+      const booksList = books.data.books || books.data;
+      const membersList = members.data.users || members.data;
+      const transactionsList = transactions.data.transactions || transactions.data;
+
       setStats({
-        books: books.data.length,
-        members: members.data.length,
-        loans: transactions.data.filter(t => t.transactionStatus === "Active").length,
+        books: books.data.pagination?.totalBooks || booksList.length,
+        members: members.data.pagination?.totalUsers || membersList.length,
+        loans: transactionsList.filter(t => t.transactionStatus === "Active").length,
       });
       
-      setRecentBooks(books.data.slice(0, 6));
+      setRecentBooks(booksList.slice(0, 6));
     } catch (err) {
       console.error("Failed to load:", err);
     } finally {
@@ -96,7 +100,7 @@ export default function HomePage() {
             <div className="text-3xl font-bold text-slate-900">
               {loading ? "—" : stats.loans}
             </div>
-            <div className="text-sm text-slate-600 mt-1">Active Loans</div>
+            <div className="text-sm text-slate-600 mt-1">Issued Books</div>
           </div>
         </div>
       </section>
