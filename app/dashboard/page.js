@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import api from "@/lib/axios";
 
 export default function MemberDashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [memberDetails, setMemberDetails] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
@@ -226,66 +226,70 @@ export default function MemberDashboard() {
             )}
 
             {activeTab === "pending" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Pending Requests</h2>
-                <p className="text-sm text-gray-600 mb-4">
-                  These are your book requests waiting for admin approval.
-                </p>
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-xl font-semibold text-zinc-900 tracking-tight">Pending Requests</h2>
+                  <p className="text-sm text-zinc-600 mt-1">
+                    These are your book requests waiting for admin approval.
+                  </p>
+                </div>
                 
                 {cancelMessage && (
-                  <div className={`p-3 rounded-lg mb-4 ${
+                  <div className={`px-4 py-3 rounded-md border text-sm ${
                     cancelMessage.includes("success") 
-                      ? "bg-green-100 text-green-700" 
-                      : "bg-red-100 text-red-700"
+                      ? "bg-green-50 border-green-200 text-green-800" 
+                      : "bg-red-50 border-red-200 text-red-800"
                   }`}>
                     {cancelMessage}
                   </div>
                 )}
 
                 {pendingTransactions.length > 0 ? (
-                  <table className="min-w-full bg-white border rounded-lg">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">From Date</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">To Date</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Requested On</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Status</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pendingTransactions.map((tx, index) => (
-                        <tr key={tx.id} className="border-t">
-                          <td className="px-4 py-2 text-sm">{index + 1}</td>
-                          <td className="px-4 py-2 text-sm font-medium">{tx.bookName}</td>
-                          <td className="px-4 py-2 text-sm">{tx.fromDate}</td>
-                          <td className="px-4 py-2 text-sm">{tx.toDate}</td>
-                          <td className="px-4 py-2 text-sm">
-                            {new Date(tx.createdAt).toLocaleDateString()}
-                          </td>
-                          <td className="px-4 py-2 text-sm">
-                            <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">
-                              Pending Approval
-                            </span>
-                          </td>
-                          <td className="px-4 py-2 text-sm">
-                            <button
-                              onClick={() => handleCancelRequest(tx.id)}
-                              className="text-red-600 hover:text-red-700 font-medium text-sm"
-                            >
-                              Cancel
-                            </button>
-                          </td>
+                  <div className="border border-zinc-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                    <table className="min-w-full divide-y divide-zinc-200">
+                      <thead>
+                        <tr className="bg-zinc-50">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">No</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Book Name</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">From Date</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">To Date</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Requested On</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Status</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Action</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100">
+                        {pendingTransactions.map((tx, index) => (
+                          <tr key={tx.id} className="hover:bg-zinc-50 transition-colors">
+                            <td className="px-4 py-3 text-sm text-zinc-500">{index + 1}</td>
+                            <td className="px-4 py-3 text-sm font-medium text-zinc-900">{tx.bookName}</td>
+                            <td className="px-4 py-3 text-sm text-zinc-600">{tx.fromDate}</td>
+                            <td className="px-4 py-3 text-sm text-zinc-600">{tx.toDate}</td>
+                            <td className="px-4 py-3 text-sm text-zinc-600">
+                              {new Date(tx.createdAt).toLocaleDateString()}
+                            </td>
+                            <td className="px-4 py-3 text-sm">
+                              <span className="px-2 py-1 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-md text-xs font-medium">
+                                Pending Approval
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-sm text-right">
+                              <button
+                                onClick={() => handleCancelRequest(tx.id)}
+                                className="text-red-600 hover:text-red-700 font-medium text-sm transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">No pending requests</p>
-                    <p className="text-sm text-gray-400 mt-2">
+                  <div className="text-center py-12 bg-zinc-50 rounded-lg border border-zinc-200">
+                    <p className="text-zinc-500">No pending requests</p>
+                    <p className="text-sm text-zinc-400 mt-2">
                       Browse books and click "Request Book" to get started
                     </p>
                   </div>
@@ -294,40 +298,44 @@ export default function MemberDashboard() {
             )}
 
             {activeTab === "issued" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Issued Books</h2>
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-zinc-900 tracking-tight">Issued Books</h2>
                 {issuedTransactions.length > 0 ? (
-                  <table className="min-w-full bg-white border rounded-lg">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">From Date</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">To Date</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Fine</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {issuedTransactions.map((tx, index) => {
-                        const fine = calculateFine(tx.toDate);
-                        return (
-                          <tr key={tx.id} className={`border-t ${fine > 0 ? "bg-red-50" : ""}`}>
-                            <td className="px-4 py-2 text-sm">{index + 1}</td>
-                            <td className="px-4 py-2 text-sm">{tx.bookName}</td>
-                            <td className="px-4 py-2 text-sm">{tx.fromDate}</td>
-                            <td className="px-4 py-2 text-sm">{tx.toDate}</td>
-                            <td className="px-4 py-2 text-sm">
-                              <span className={fine > 0 ? "text-red-600 font-semibold" : ""}>
-                                ${fine}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                  <div className="border border-zinc-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                    <table className="min-w-full divide-y divide-zinc-200">
+                      <thead>
+                        <tr className="bg-zinc-50">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">No</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Book Name</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">From Date</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">To Date</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Fine</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100">
+                        {issuedTransactions.map((tx, index) => {
+                          const fine = calculateFine(tx.toDate);
+                          return (
+                            <tr key={tx.id} className={`transition-colors ${fine > 0 ? "bg-red-50 hover:bg-red-100" : "hover:bg-zinc-50"}`}>
+                              <td className="px-4 py-3 text-sm text-zinc-500">{index + 1}</td>
+                              <td className="px-4 py-3 text-sm font-medium text-zinc-900">{tx.bookName}</td>
+                              <td className="px-4 py-3 text-sm text-zinc-600">{tx.fromDate}</td>
+                              <td className="px-4 py-3 text-sm text-zinc-600">{tx.toDate}</td>
+                              <td className="px-4 py-3 text-sm">
+                                <span className={`font-mono font-semibold ${fine > 0 ? "text-red-600" : "text-green-600"}`}>
+                                  ${fine}
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : (
-                  <p className="text-gray-500 text-center py-8">No issued books</p>
+                  <div className="text-center py-12 bg-zinc-50 rounded-lg border border-zinc-200">
+                    <p className="text-zinc-500 text-sm">No issued books</p>
+                  </div>
                 )}
               </div>
             )}
@@ -335,33 +343,37 @@ export default function MemberDashboard() {
 
 
             {activeTab === "history" && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Transaction History</h2>
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-zinc-900 tracking-tight">Transaction History</h2>
                 {previousTransactions.length > 0 ? (
-                  <table className="min-w-full bg-white border rounded-lg">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">From Date</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">To Date</th>
-                        <th className="px-4 py-2 text-left text-sm font-medium">Return Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {previousTransactions.map((tx, index) => (
-                        <tr key={tx.id} className="border-t">
-                          <td className="px-4 py-2 text-sm">{index + 1}</td>
-                          <td className="px-4 py-2 text-sm">{tx.bookName}</td>
-                          <td className="px-4 py-2 text-sm">{tx.fromDate}</td>
-                          <td className="px-4 py-2 text-sm">{tx.toDate}</td>
-                          <td className="px-4 py-2 text-sm">{tx.returnDate || "N/A"}</td>
+                  <div className="border border-zinc-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                    <table className="min-w-full divide-y divide-zinc-200">
+                      <thead>
+                        <tr className="bg-zinc-50">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">No</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Book Name</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">From Date</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">To Date</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Return Date</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100">
+                        {previousTransactions.map((tx, index) => (
+                          <tr key={tx.id} className="hover:bg-zinc-50 transition-colors">
+                            <td className="px-4 py-3 text-sm text-zinc-500">{index + 1}</td>
+                            <td className="px-4 py-3 text-sm font-medium text-zinc-900">{tx.bookName}</td>
+                            <td className="px-4 py-3 text-sm text-zinc-600">{tx.fromDate}</td>
+                            <td className="px-4 py-3 text-sm text-zinc-600">{tx.toDate}</td>
+                            <td className="px-4 py-3 text-sm text-zinc-600">{tx.returnDate || "N/A"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : (
-                  <p className="text-gray-500 text-center py-8">No transaction history</p>
+                  <div className="text-center py-12 bg-zinc-50 rounded-lg border border-zinc-200">
+                    <p className="text-zinc-500 text-sm">No transaction history</p>
+                  </div>
                 )}
               </div>
             )}

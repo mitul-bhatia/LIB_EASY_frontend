@@ -105,48 +105,48 @@ export default function AddBook() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Add New Book</h2>
+    <div className="space-y-5">
+      <h2 className="text-xl font-semibold text-zinc-900 tracking-tight">Add New Book</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="bg-white border border-zinc-200 rounded-lg shadow-sm p-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Book Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Book Name *
             </label>
             <input
               type="text"
               value={form.bookName}
               onChange={(e) => setForm({ ...form, bookName: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               required
             />
           </div>
 
           {/* Alternate Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Alternate Title
             </label>
             <input
               type="text"
               value={form.alternateTitle}
               onChange={(e) => setForm({ ...form, alternateTitle: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
             />
           </div>
 
           {/* Author */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Author Name *
             </label>
             <input
               type="text"
               value={form.author}
               onChange={(e) => setForm({ ...form, author: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               required
             />
           </div>
@@ -154,32 +154,32 @@ export default function AddBook() {
           {/* Language and Publisher */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-zinc-700 mb-1.5">
                 Language
               </label>
               <input
                 type="text"
                 value={form.language}
                 onChange={(e) => setForm({ ...form, language: e.target.value })}
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-zinc-700 mb-1.5">
                 Publisher
               </label>
               <input
                 type="text"
                 value={form.publisher}
                 onChange={(e) => setForm({ ...form, publisher: e.target.value })}
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               />
             </div>
           </div>
 
           {/* Available Copies */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               No. of Copies Available *
             </label>
             <input
@@ -188,7 +188,7 @@ export default function AddBook() {
               onChange={(e) =>
                 setForm({ ...form, bookCountAvailable: e.target.value })
               }
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               min="0"
               required
             />
@@ -196,7 +196,7 @@ export default function AddBook() {
 
           {/* Cover URL */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Cover Image URL
             </label>
             <input
@@ -204,16 +204,16 @@ export default function AddBook() {
               value={form.coverURL}
               onChange={(e) => setForm({ ...form, coverURL: e.target.value })}
               placeholder="https://example.com/book-cover.jpg"
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-zinc-500 mt-1.5">
               Optional: Add a URL to the book cover image
             </p>
           </div>
 
           {/* Categories */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2">
               Categories *
             </label>
             <div className="flex flex-wrap gap-2">
@@ -222,10 +222,10 @@ export default function AddBook() {
                   key={category.id}
                   type="button"
                   onClick={() => handleCategoryToggle(category.id)}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                     selectedCategories.includes(category.id)
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      ? "bg-indigo-600 text-white"
+                      : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                   }`}
                 >
                   {category.categoryName}
@@ -233,7 +233,7 @@ export default function AddBook() {
               ))}
             </div>
             {allCategories.length === 0 && (
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-zinc-500 mt-2">
                 No categories available. Add categories first.
               </p>
             )}
@@ -242,10 +242,10 @@ export default function AddBook() {
           {/* Message */}
           {message && (
             <div
-              className={`p-3 rounded-lg ${
+              className={`px-4 py-3 rounded-md border text-sm ${
                 message.includes("success")
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
+                  ? "bg-green-50 border-green-200 text-green-800"
+                  : "bg-red-50 border-red-200 text-red-800"
               }`}
             >
               {message}
@@ -256,10 +256,10 @@ export default function AddBook() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-2 px-4 rounded-lg font-medium text-white ${
+            className={`w-full py-2.5 px-4 rounded-md font-medium text-white text-sm transition-colors ${
               isLoading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "bg-zinc-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
             }`}
           >
             {isLoading ? "Adding Book..." : "Add Book"}
@@ -270,32 +270,32 @@ export default function AddBook() {
       {/* Recently Added Books */}
       {recentBooks.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-3">Recently Added Books</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border rounded-lg">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    S.No
+          <h3 className="text-base font-medium text-zinc-900 mb-3">Recently Added Books</h3>
+          <div className="border border-zinc-200 rounded-lg overflow-hidden bg-white shadow-sm">
+            <table className="min-w-full divide-y divide-zinc-200">
+              <thead>
+                <tr className="bg-zinc-50">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                    No
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Book Name
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Author
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Added Date
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-zinc-100">
                 {recentBooks.map((book, index) => (
-                  <tr key={book.id} className="border-t">
-                    <td className="px-4 py-2 text-sm">{index + 1}</td>
-                    <td className="px-4 py-2 text-sm">{book.bookName}</td>
-                    <td className="px-4 py-2 text-sm">{book.author}</td>
-                    <td className="px-4 py-2 text-sm">
+                  <tr key={book.id} className="hover:bg-zinc-50 transition-colors">
+                    <td className="px-4 py-3 text-sm text-zinc-500">{index + 1}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-zinc-900">{book.bookName}</td>
+                    <td className="px-4 py-3 text-sm text-zinc-600">{book.author}</td>
+                    <td className="px-4 py-3 text-sm text-zinc-600">
                       {new Date(book.createdAt).toLocaleDateString()}
                     </td>
                   </tr>

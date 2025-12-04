@@ -26,86 +26,86 @@ export default function AdminDashboard() {
   if (!user || !user.isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage books, members, and transactions</p>
+      <div className="bg-white border-b border-zinc-200">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">Admin Dashboard</h1>
+          <p className="text-sm text-zinc-500 mt-1">Manage books, members, and transactions</p>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="bg-white rounded-lg shadow">
-          <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6 overflow-x-auto" aria-label="Tabs">
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="bg-white rounded-lg border border-zinc-200 shadow-sm">
+          <div className="border-b border-zinc-200">
+            <nav className="flex gap-1 px-6 overflow-x-auto" aria-label="Tabs">
               <button
                 onClick={() => setActiveTab("requests")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === "requests"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-zinc-900 text-zinc-900"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
-                📋 Pending Requests
+                Pending Requests
               </button>
               <button
                 onClick={() => setActiveTab("categories")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === "categories"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-zinc-900 text-zinc-900"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 Categories
               </button>
               <button
                 onClick={() => setActiveTab("addbook")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === "addbook"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-zinc-900 text-zinc-900"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 Add Book
               </button>
               <button
                 onClick={() => setActiveTab("managebooks")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === "managebooks"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-zinc-900 text-zinc-900"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 Manage Books
               </button>
               <button
                 onClick={() => setActiveTab("getmember")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === "getmember"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-zinc-900 text-zinc-900"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 View Members
               </button>
               <button
                 onClick={() => setActiveTab("addtransaction")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === "addtransaction"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-zinc-900 text-zinc-900"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 Issue/Reserve
               </button>
               <button
                 onClick={() => setActiveTab("return")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === "return"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-zinc-900 text-zinc-900"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 Return Book

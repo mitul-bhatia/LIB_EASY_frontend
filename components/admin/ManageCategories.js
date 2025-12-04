@@ -47,68 +47,68 @@ export default function ManageCategories() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Manage Categories</h2>
+    <div className="space-y-5">
+      <h2 className="text-xl font-semibold text-zinc-900 tracking-tight">Manage Categories</h2>
 
-        {/* Add Category Form */}
-        <form onSubmit={handleAddCategory} className="flex gap-2 mb-6">
+      {/* Add Category Form */}
+      <div className="bg-white border border-zinc-200 rounded-lg shadow-sm p-5">
+        <form onSubmit={handleAddCategory} className="flex gap-2">
           <input
             type="text"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
             placeholder="Enter category name"
-            className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+            className="flex-1 px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
           />
           <button
             type="submit"
             disabled={isLoading}
-            className={`px-6 py-2 rounded-lg font-medium text-white ${
+            className={`px-6 py-2 rounded-md font-medium text-white text-sm transition-colors ${
               isLoading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "bg-zinc-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
             }`}
           >
             {isLoading ? "Adding..." : "Add Category"}
           </button>
         </form>
+      </div>
 
-        {/* Message */}
-        {message && (
-          <div
-            className={`p-3 rounded-lg mb-4 ${
-              message.includes("success")
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {message}
-          </div>
-        )}
-
-        {/* Categories List */}
-        <div>
-          <h3 className="text-lg font-semibold mb-3">All Categories</h3>
-          {categories.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {categories.map((category) => (
-                <div
-                  key={category.id}
-                  className="p-3 bg-gray-50 border rounded-lg"
-                >
-                  <p className="font-medium">{category.categoryName}</p>
-                  <p className="text-sm text-gray-600">
-                    {category.books.length} book{category.books.length !== 1 ? "s" : ""}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 text-center py-8">
-              No categories yet. Add your first category above.
-            </p>
-          )}
+      {/* Message */}
+      {message && (
+        <div
+          className={`px-4 py-3 rounded-md border text-sm ${
+            message.includes("success")
+              ? "bg-green-50 border-green-200 text-green-800"
+              : "bg-red-50 border-red-200 text-red-800"
+          }`}
+        >
+          {message}
         </div>
+      )}
+
+      {/* Categories List */}
+      <div>
+        <h3 className="text-base font-medium text-zinc-900 mb-3">All Categories</h3>
+        {categories.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                className="p-4 bg-white border border-zinc-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+              >
+                <p className="font-medium text-zinc-900">{category.categoryName}</p>
+                <p className="text-sm text-zinc-500 mt-1">
+                  {category.books.length} book{category.books.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-zinc-500 text-center py-8 text-sm">
+            No categories yet. Add your first category above.
+          </p>
+        )}
       </div>
     </div>
   );

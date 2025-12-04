@@ -77,24 +77,24 @@ export default function AddMember() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Add New Member</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="space-y-5">
+      <h2 className="text-xl font-semibold text-zinc-900 tracking-tight">Add New Member</h2>
+      
+      <div className="bg-white border border-zinc-200 rounded-lg shadow-sm p-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Role Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2">
               Role *
             </label>
-            <div className="flex space-x-2">
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setIsAdmin(false)}
-                className={`flex-1 py-2 rounded-lg font-medium transition ${
+                className={`flex-1 py-2 rounded-md font-medium text-sm transition-colors ${
                   !isAdmin
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                 }`}
               >
                 Student
@@ -102,10 +102,10 @@ export default function AddMember() {
               <button
                 type="button"
                 onClick={() => setIsAdmin(true)}
-                className={`flex-1 py-2 rounded-lg font-medium transition ${
+                className={`flex-1 py-2 rounded-md font-medium text-sm transition-colors ${
                   isAdmin
                     ? "bg-red-600 text-white"
-                    : "bg-gray-200 text-gray-700"
+                    : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                 }`}
               >
                 Admin
@@ -115,56 +115,56 @@ export default function AddMember() {
 
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Full Name *
             </label>
             <input
               type="text"
               value={form.userFullName}
               onChange={(e) => setForm({ ...form, userFullName: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               required
             />
           </div>
 
           {/* Member ID */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Member ID (Optional)
             </label>
             <input
               type="text"
               value={form.memberId}
               onChange={(e) => setForm({ ...form, memberId: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               placeholder="e.g., MEM001"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Email *
             </label>
             <input
               type="email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               required
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Password *
             </label>
             <input
               type="password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               minLength={6}
               required
             />
@@ -172,14 +172,14 @@ export default function AddMember() {
 
           {/* Mobile Number */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Mobile Number *
             </label>
             <input
               type="tel"
               value={form.mobileNumber}
               onChange={(e) => setForm({ ...form, mobileNumber: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
               required
             />
           </div>
@@ -187,10 +187,10 @@ export default function AddMember() {
           {/* Message */}
           {message && (
             <div
-              className={`p-3 rounded-lg ${
+              className={`px-4 py-3 rounded-md border text-sm ${
                 message.includes("success")
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
+                  ? "bg-green-50 border-green-200 text-green-800"
+                  : "bg-red-50 border-red-200 text-red-800"
               }`}
             >
               {message}
@@ -201,12 +201,12 @@ export default function AddMember() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-2 px-4 rounded-lg font-medium text-white ${
+            className={`w-full py-2.5 px-4 rounded-md font-medium text-white text-sm transition-colors ${
               isLoading
-                ? "bg-gray-400 cursor-not-allowed"
+                ? "bg-zinc-400 cursor-not-allowed"
                 : isAdmin
                 ? "bg-red-600 hover:bg-red-700"
-                : "bg-blue-600 hover:bg-blue-700"
+                : "bg-indigo-600 hover:bg-indigo-700"
             }`}
           >
             {isLoading ? "Adding..." : `Add ${isAdmin ? "Admin" : "Student"}`}
@@ -217,46 +217,46 @@ export default function AddMember() {
       {/* Recently Added Members */}
       {recentMembers.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-3">Recently Added Members</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border rounded-lg">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    S.No
+          <h3 className="text-base font-medium text-zinc-900 mb-3">Recently Added Members</h3>
+          <div className="border border-zinc-200 rounded-lg overflow-hidden bg-white shadow-sm">
+            <table className="min-w-full divide-y divide-zinc-200">
+              <thead>
+                <tr className="bg-zinc-50">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                    No
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Member ID
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Name
                   </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Email
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-zinc-100">
                 {recentMembers.map((member, index) => (
-                  <tr key={member.id} className="border-t">
-                    <td className="px-4 py-2 text-sm">{index + 1}</td>
-                    <td className="px-4 py-2 text-sm">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                  <tr key={member.id} className="hover:bg-zinc-50 transition-colors">
+                    <td className="px-4 py-3 text-sm text-zinc-500">{index + 1}</td>
+                    <td className="px-4 py-3 text-sm">
+                      <span className={`px-2 py-1 rounded-md text-xs font-medium border ${
                         member.isAdmin 
-                          ? "bg-red-100 text-red-700" 
-                          : "bg-blue-100 text-blue-700"
+                          ? "bg-red-50 text-red-700 border-red-200" 
+                          : "bg-blue-50 text-blue-700 border-blue-200"
                       }`}>
                         {member.isAdmin ? "Admin" : "Student"}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-sm">
+                    <td className="px-4 py-3 text-sm text-zinc-600">
                       {member.memberId || "N/A"}
                     </td>
-                    <td className="px-4 py-2 text-sm">{member.userFullName}</td>
-                    <td className="px-4 py-2 text-sm">{member.email}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-zinc-900">{member.userFullName}</td>
+                    <td className="px-4 py-3 text-sm text-zinc-600">{member.email}</td>
                   </tr>
                 ))}
               </tbody>

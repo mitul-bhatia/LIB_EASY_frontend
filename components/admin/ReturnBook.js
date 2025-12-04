@@ -66,126 +66,121 @@ export default function ReturnBook() {
   );
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Return Book</h2>
+    <div className="space-y-5">
+      <h2 className="text-xl font-semibold text-zinc-900 tracking-tight">Return Book</h2>
 
-        <input
-          type="text"
-          placeholder="Search by book name, borrower name, or ID..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 mb-4"
-        />
+      <input
+        type="text"
+        placeholder="Search by book name, borrower name, or ID..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+      />
 
-        {message && (
-          <div
-            className={`p-3 rounded-lg mb-4 ${
-              message.includes("success")
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {message}
-          </div>
-        )}
+      {message && (
+        <div
+          className={`px-4 py-3 rounded-md border text-sm ${
+            message.includes("success")
+              ? "bg-green-50 border-green-200 text-green-800"
+              : "bg-red-50 border-red-200 text-red-800"
+          }`}
+        >
+          {message}
+        </div>
+      )}
 
-        {filteredTransactions.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border rounded-lg">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Book Name
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Borrower
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Type
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    From Date
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    To Date
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Fine
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTransactions.map((tx) => {
-                  const fine = calculateFine(tx.toDate);
-                  const isOverdue = fine > 0;
-                  return (
-                    <tr
-                      key={tx.id}
-                      className={`border-t ${isOverdue ? "bg-red-50" : ""}`}
-                    >
-                      <td className="px-4 py-2 text-sm">{tx.bookName}</td>
-                      <td className="px-4 py-2 text-sm">
-                        {tx.borrowerName}
-                        <br />
-                        <span className="text-xs text-gray-500">
-                          {tx.borrowerId}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2 text-sm">
-                        <span
-                          className={`px-2 py-1 rounded text-xs ${
-                            tx.transactionType === "Issued"
-                              ? "bg-blue-100 text-blue-700"
-                              : "bg-green-100 text-green-700"
-                          }`}
-                        >
-                          {tx.transactionType}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2 text-sm">{tx.fromDate}</td>
-                      <td className="px-4 py-2 text-sm">{tx.toDate}</td>
-                      <td className="px-4 py-2 text-sm">
-                        <span
-                          className={`font-semibold ${
-                            isOverdue ? "text-red-600" : "text-green-600"
-                          }`}
-                        >
-                          ${fine}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2 text-sm">
-                        <button
-                          onClick={() => handleReturn(tx)}
-                          disabled={isLoading}
-                          className={`px-3 py-1 rounded text-sm font-medium ${
-                            isLoading
-                              ? "bg-gray-300 cursor-not-allowed"
-                              : "bg-blue-600 text-white hover:bg-blue-700"
-                          }`}
-                        >
-                          Return
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">
-              {searchTerm
-                ? "No transactions found matching your search"
-                : "No active transactions"}
-            </p>
-          </div>
-        )}
-      </div>
+      {filteredTransactions.length > 0 ? (
+        <div className="border border-zinc-200 rounded-lg overflow-hidden bg-white shadow-sm">
+          <table className="min-w-full divide-y divide-zinc-200">
+            <thead>
+              <tr className="bg-zinc-50">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  Book Name
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  Borrower
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  Type
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  From Date
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  To Date
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  Fine
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100">
+              {filteredTransactions.map((tx) => {
+                const fine = calculateFine(tx.toDate);
+                const isOverdue = fine > 0;
+                return (
+                  <tr
+                    key={tx.id}
+                    className={`transition-colors ${isOverdue ? "bg-red-50 hover:bg-red-100" : "hover:bg-zinc-50"}`}
+                  >
+                    <td className="px-4 py-3 text-sm font-medium text-zinc-900">{tx.bookName}</td>
+                    <td className="px-4 py-3 text-sm">
+                      <div className="text-zinc-900">{tx.borrowerName}</div>
+                      <div className="text-xs text-zinc-500">{tx.borrowerId}</div>
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <span
+                        className={`px-2 py-1 rounded-md text-xs font-medium border ${
+                          tx.transactionType === "Issued"
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "bg-green-50 text-green-700 border-green-200"
+                        }`}
+                      >
+                        {tx.transactionType}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-zinc-600">{tx.fromDate}</td>
+                    <td className="px-4 py-3 text-sm text-zinc-600">{tx.toDate}</td>
+                    <td className="px-4 py-3 text-sm">
+                      <span
+                        className={`font-mono font-semibold ${
+                          isOverdue ? "text-red-600" : "text-green-600"
+                        }`}
+                      >
+                        ${fine}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-right">
+                      <button
+                        onClick={() => handleReturn(tx)}
+                        disabled={isLoading}
+                        className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                          isLoading
+                            ? "bg-zinc-300 text-zinc-500 cursor-not-allowed"
+                            : "bg-indigo-600 text-white hover:bg-indigo-700"
+                        }`}
+                      >
+                        Return
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="text-center py-12 bg-zinc-50 rounded-lg border border-zinc-200">
+          <p className="text-zinc-500 text-sm">
+            {searchTerm
+              ? "No transactions found matching your search"
+              : "No active transactions"}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
