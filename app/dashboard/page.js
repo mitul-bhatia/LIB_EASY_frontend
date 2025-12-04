@@ -80,49 +80,49 @@ export default function MemberDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow">
-          <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+          <div className="border-b border-zinc-200">
+            <nav className="flex gap-1 px-6" aria-label="Tabs">
               <button
                 onClick={() => setActiveTab("profile")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === "profile"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
+                    ? "border-indigo-600 text-indigo-600"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 Profile
               </button>
               <button
                 onClick={() => setActiveTab("pending")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm relative ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
                   activeTab === "pending"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
+                    ? "border-indigo-600 text-indigo-600"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 Pending Requests
                 {pendingTransactions.length > 0 && (
-                  <span className="ml-1 px-2 py-0.5 text-xs bg-yellow-500 text-white rounded-full">
+                  <span className="px-1.5 py-0.5 text-xs bg-orange-100 text-orange-700 rounded font-semibold">
                     {pendingTransactions.length}
                   </span>
                 )}
               </button>
               <button
                 onClick={() => setActiveTab("issued")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === "issued"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
+                    ? "border-indigo-600 text-indigo-600"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 Issued Books
               </button>
               <button
                 onClick={() => setActiveTab("history")}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`py-3 px-4 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === "history"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
+                    ? "border-indigo-600 text-indigo-600"
+                    : "border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300"
                 }`}
               >
                 History
@@ -133,58 +133,93 @@ export default function MemberDashboard() {
           <div className="p-6">
             {activeTab === "profile" && memberDetails && (
               <div className="space-y-6">
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-600">Full Name</p>
-                      <p className="font-medium">{memberDetails.userFullName}</p>
+                {/* ID Card Style Profile */}
+                <div className="bg-white border border-zinc-200 rounded-lg shadow-sm p-6">
+                  <div className="flex items-start gap-6">
+                    {/* Avatar */}
+                    <div className="flex-shrink-0">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-semibold">
+                        {memberDetails.userFullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Role</p>
-                      <p className="font-medium">{memberDetails.isAdmin ? "Admin" : "Student"}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Member ID</p>
-                      <p className="font-medium">
-                        {memberDetails.memberId || "N/A"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Email</p>
-                      <p className="font-medium">{memberDetails.email}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Mobile</p>
-                      <p className="font-medium">{memberDetails.mobileNumber}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Points</p>
-                      <p className="font-medium text-blue-600 text-xl">
-                        {memberDetails.points}
-                      </p>
+
+                    {/* Info */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <h2 className="text-2xl font-semibold text-zinc-900 tracking-tight">
+                          {memberDetails.userFullName}
+                        </h2>
+                        <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
+                          Member
+                        </span>
+                        {memberDetails.memberId && (
+                          <span className="px-2.5 py-0.5 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-full">
+                            {memberDetails.memberId}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Details Grid */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex items-center gap-2 text-sm">
+                          <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                          <span className="text-zinc-600">{memberDetails.email}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
+                          <span className="text-zinc-600">{memberDetails.mobileNumber}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                          </svg>
+                          <span className="text-zinc-900 font-semibold">{memberDetails.points} Points</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
+                {/* Stats Cards */}
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-yellow-50 p-4 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-yellow-600">
-                      {pendingTransactions.length}
-                    </p>
-                    <p className="text-sm text-gray-600">Pending</p>
+                  <div className="bg-white border border-zinc-200 rounded-lg shadow-sm p-5 border-t-4 border-t-orange-400">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-4xl font-mono font-bold text-zinc-900 tracking-tighter">
+                          {pendingTransactions.length}
+                        </p>
+                        <p className="text-sm text-zinc-500 mt-1">Pending Requests</p>
+                      </div>
+               
+                    </div>
                   </div>
-                  <div className="bg-blue-50 p-4 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-blue-600">
-                      {issuedTransactions.length}
-                    </p>
-                    <p className="text-sm text-gray-600">Issued</p>
+
+                  <div className="bg-white border border-zinc-200 rounded-lg shadow-sm p-5 border-t-4 border-t-blue-500">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-4xl font-mono font-bold text-zinc-900 tracking-tighter">
+                          {issuedTransactions.length}
+                        </p>
+                        <p className="text-sm text-zinc-500 mt-1">Issued Books</p>
+                      </div>
+                
+                    </div>
                   </div>
-                  <div className="bg-purple-50 p-4 rounded-lg text-center">
-                    <p className="text-3xl font-bold text-purple-600">
-                      {previousTransactions.length}
-                    </p>
-                    <p className="text-sm text-gray-600">Completed</p>
+
+                  <div className="bg-white border border-zinc-200 rounded-lg shadow-sm p-5 border-t-4 border-t-green-500">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-4xl font-mono font-bold text-zinc-900 tracking-tighter">
+                          {previousTransactions.length}
+                        </p>
+                        <p className="text-sm text-zinc-500 mt-1">Completed</p>
+                      </div>
+                  
+                    </div>
                   </div>
                 </div>
               </div>

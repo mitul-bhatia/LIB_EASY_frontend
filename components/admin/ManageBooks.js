@@ -95,15 +95,15 @@ export default function ManageBooks() {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Manage Books</h2>
+    <div className="space-y-5">
+      <h2 className="text-xl font-semibold text-zinc-900 tracking-tight">Manage Books</h2>
 
       {message && (
         <div
-          className={`p-3 rounded-lg ${
+          className={`px-4 py-3 rounded-md border text-sm ${
             message.includes("success")
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
+              ? "bg-green-50 border-green-200 text-green-800"
+              : "bg-red-50 border-red-200 text-red-800"
           }`}
         >
           {message}
@@ -112,62 +112,64 @@ export default function ManageBooks() {
 
       {/* Edit Modal */}
       {editingBook && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-4">Edit Book</h3>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl border border-zinc-200 p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold text-zinc-900 tracking-tight mb-6">Edit Book</h3>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Book Name</label>
-                <input
-                  type="text"
-                  value={editingBook.bookName}
-                  onChange={(e) =>
-                    setEditingBook({ ...editingBook, bookName: e.target.value })
-                  }
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
+            <div className="space-y-5">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1.5">Book Name</label>
+                  <input
+                    type="text"
+                    value={editingBook.bookName}
+                    onChange={(e) =>
+                      setEditingBook({ ...editingBook, bookName: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-1">Author</label>
-                <input
-                  type="text"
-                  value={editingBook.author}
-                  onChange={(e) =>
-                    setEditingBook({ ...editingBook, author: e.target.value })
-                  }
-                  className="w-full p-2 border rounded-lg"
-                />
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1.5">Author</label>
+                  <input
+                    type="text"
+                    value={editingBook.author}
+                    onChange={(e) =>
+                      setEditingBook({ ...editingBook, author: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Language</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1.5">Language</label>
                   <input
                     type="text"
                     value={editingBook.language || ""}
                     onChange={(e) =>
                       setEditingBook({ ...editingBook, language: e.target.value })
                     }
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Publisher</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1.5">Publisher</label>
                   <input
                     type="text"
                     value={editingBook.publisher || ""}
                     onChange={(e) =>
                       setEditingBook({ ...editingBook, publisher: e.target.value })
                     }
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Available Copies</label>
+                <label className="block text-sm font-medium text-zinc-700 mb-1.5">Available Copies</label>
                 <input
                   type="number"
                   value={editingBook.bookCountAvailable}
@@ -177,35 +179,36 @@ export default function ManageBooks() {
                       bookCountAvailable: parseInt(e.target.value),
                     })
                   }
-                  className="w-full p-2 border rounded-lg"
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                   min="0"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Cover URL</label>
+                <label className="block text-sm font-medium text-zinc-700 mb-1.5">Cover URL</label>
                 <input
                   type="url"
                   value={editingBook.coverURL || ""}
                   onChange={(e) =>
                     setEditingBook({ ...editingBook, coverURL: e.target.value })
                   }
-                  className="w-full p-2 border rounded-lg"
+                  className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  placeholder="https://..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Categories</label>
+                <label className="block text-sm font-medium text-zinc-700 mb-2">Categories</label>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => (
                     <button
                       key={cat.id}
                       type="button"
                       onClick={() => handleCategoryToggle(cat.id)}
-                      className={`px-3 py-1 rounded-full text-sm ${
+                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                         editingBook.categories?.includes(cat.id)
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          ? "bg-indigo-600 text-white"
+                          : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                       }`}
                     >
                       {cat.categoryName}
@@ -214,16 +217,16 @@ export default function ManageBooks() {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-6 border-t border-zinc-200">
                 <button
                   onClick={() => setEditingBook(null)}
-                  className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 border border-zinc-300 text-zinc-700 rounded-md hover:bg-zinc-50 font-medium text-sm transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleUpdate}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm transition-colors"
                 >
                   Update Book
                 </button>
@@ -234,37 +237,43 @@ export default function ManageBooks() {
       )}
 
       {/* Books Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border rounded-lg">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-2 text-left text-sm font-medium">S.No</th>
-              <th className="px-4 py-2 text-left text-sm font-medium">Book Name</th>
-              <th className="px-4 py-2 text-left text-sm font-medium">Author</th>
-              <th className="px-4 py-2 text-left text-sm font-medium">Available</th>
-              <th className="px-4 py-2 text-left text-sm font-medium">Actions</th>
+      <div className="border border-zinc-200 rounded-lg overflow-hidden bg-white shadow-sm">
+        <table className="min-w-full divide-y divide-zinc-200">
+          <thead>
+            <tr className="bg-zinc-50">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">No</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Book Name</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Author</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Available</th>
+              <th className="px-4 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-zinc-100">
             {books.map((book, index) => (
-              <tr key={book.id} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2 text-sm">{index + 1}</td>
-                <td className="px-4 py-2 text-sm font-medium">{book.bookName}</td>
-                <td className="px-4 py-2 text-sm">{book.author}</td>
-                <td className="px-4 py-2 text-sm">{book.bookCountAvailable}</td>
-                <td className="px-4 py-2 text-sm">
-                  <div className="flex gap-2">
+              <tr key={book.id} className="hover:bg-zinc-50 transition-colors">
+                <td className="px-4 py-3 text-sm text-zinc-500">{index + 1}</td>
+                <td className="px-4 py-3 text-sm font-medium text-zinc-900">{book.bookName}</td>
+                <td className="px-4 py-3 text-sm text-zinc-600">{book.author}</td>
+                <td className="px-4 py-3 text-sm text-zinc-600">{book.bookCountAvailable}</td>
+                <td className="px-4 py-3 text-sm text-right">
+                  <div className="flex items-center justify-end gap-1">
                     <button
                       onClick={() => handleEdit(book)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs"
+                      className="p-1.5 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
+                      title="Edit book"
                     >
-                      Edit
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
                     </button>
                     <button
                       onClick={() => handleDelete(book.id)}
-                      className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs"
+                      className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                      title="Delete book"
                     >
-                      Delete
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
                     </button>
                   </div>
                 </td>
