@@ -165,8 +165,16 @@ export default function RequestBookPage() {
               Book Details
             </h2>
 
-            <div className="w-full h-64 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg mb-4 flex items-center justify-center">
-              <span className="text-6xl">📚</span>
+            <div className="w-full h-64 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+              {book.coverURL ? (
+                <img 
+                  src={book.coverURL} 
+                  alt={book.bookName}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-6xl">📚</span>
+              )}
             </div>
 
             <div className="space-y-3">

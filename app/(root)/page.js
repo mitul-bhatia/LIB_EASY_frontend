@@ -11,8 +11,10 @@ export default function HomePage() {
   const [stats, setStats] = useState({ books: 0, members: 0, loans: 0 });
   const [recentBooks, setRecentBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     loadData();
   }, []);
 
@@ -55,7 +57,9 @@ export default function HomePage() {
             Browse thousands of books, request loans online, and track everything from your dashboard.
           </p>
           
-          {user ? (
+          {!mounted ? (
+            <div className="h-12 w-48 bg-white/10 rounded-lg animate-pulse"></div>
+          ) : user ? (
             <Link
               href={user.isAdmin ? "/admin/dashboard" : "/dashboard"}
               className="inline-block px-6 py-3 bg-white text-slate-900 rounded-lg font-medium hover:bg-slate-100 transition"
